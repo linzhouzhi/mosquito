@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="../vender/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet" charset="utf-8" />
+    <link href="../css/common.css" rel="stylesheet" charset="utf-8" />
+    <style>
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Mosquito</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/role/add">add role <span class="sr-only">(current)</span></a></li>
+                <li><a href="/role/list">role statistic</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div style="width:10px;height:70px"></div>
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-plus"></span> add role</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-8" style="margin: 0 auto">
+                        <div style="clear: both"></div>
+                        <div class="form-group" style="width: 90%">
+                            <label> 添加 service</label>
+                            <input type="text" name="service" class="form-control" placeholder="service001"></input>
+                            <ul class="typeahead dropdown-menu all-service" role="listbox" style="top: 59px; left: 15px;display:none">
+                                <li class="dropdown-li"><a class="dropdown-item">PHP</a></li>
+                                <li class="dropdown-li"><a class="dropdown-item">PostgreSQL</a></li>
+                            </ul>
+                        </div>
+                        <div class="form-group" style="width: 90%">
+                            <label> 报警类型</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" aria-controls="ping">ping</input>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" aria-controls="error_log">error log</input>
+                                </label>
+
+                                <ul id="role-type" class="nav nav-tabs hidden" role="tablist">
+                                    <li role="presentation" class="active"><a href="#ping" aria-controls="ping" role="tab" data-toggle="tab">Home</a></li>
+                                    <li role="presentation"><a href="#error_log" aria-controls="error_log" role="tab" data-toggle="tab">Profile</a></li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="ping">
+                                        <div class="form-group">
+                                            <label> 添加 url</label>
+                                            <input type="text" name="url" class="form-control" placeholder="service001"></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <label> 选择超时时间</label>
+                                            <select class="form-control">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="error_log">暂不支持</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 90%">
+                            <label> 选择成员 </label>
+                            <table>
+                                <tbody>
+                                <tr th:each="item : ${userLsit}" class="members-tr">
+                                    <td th:text="${item.key}" valign="top"></td>
+                                    <td>
+                                        <label class="checkbox-inline" th:each="user : ${item.value}">
+                                            <input type="checkbox" name="members" value="option1" th:text="${user.userid}"></input>
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="all_members" value="">@all</input>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button type="submit" id="commad-submit" style="width:90%" class="btn btn-default btn-block">Submit</button>
+                    </div><!-- .col-md-4 -->
+                </div><!-- .panel-body -->
+            </div><!-- .panel -->
+        </div><!-- .row -->
+    </div><!-- .container -->
+</div><!-- .container-fluid -->
+
+<script src="../vender/jQuery/jquery-2.2.3.min.js"></script>
+<script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="../vender/bootstrap3-typeahead.js"></script>
+<script>
+    $("input[aria-controls='ping']").trigger("click");
+    $("input[aria-controls='ping']").click(function () {
+        $("a[aria-controls='ping']").click();
+    });
+    $("input[aria-controls='error_log']").click(function () {
+        $("a[aria-controls='error_log']").click();
+    });
+
+    //******************  添加服务器
+    var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];
+    var allService = '';
+    $("input[name='service']").typeahead({
+        source: subjects
+    });
+
+    $("input[name='service']").click(function () {
+        if( $(this).val() == "" ||  $(this).val() == " "){
+            $("input[name='service']").after(allService);
+        }
+    });
+    $("input[name='service']").bind('input focus propertychange',function () {
+        var this_val = $(this).val();
+        if( this_val == "" ||  this_val == " "){
+            $(".all-service").css("display", "block");
+        }else{
+            $(".all-service").css("display", "none");
+        }
+    });
+    // 添加完成后就可以绑定事件
+    $(".dropdown-li").bind('click',function () {
+        var text_value = $(this).text().trim();
+        $("input[name='service']").val(text_value);
+        $(".all-service").css("display", "none");
+    });
+    // 鼠标离开要隐藏掉
+    $("input[name='service']").blur(function (e) {
+        setTimeout(function () { //因为点击事件和鼠标离开事件绑定在同一个对象，所有要延迟一下
+            console.log("aa");
+            $(".all-service").css("display", "none");
+        }, 500);
+    });
+
+    //************** 选择成员
+    $("input[name='all_members']").click(function () {
+        var checkboxs = $(this).parent(".checkbox-inline").prevAll().trigger("click");
+        console.log(checkboxs);
+    });
+
+
+</script>
+</body>
+</html>
