@@ -1,5 +1,11 @@
 package com.lzz.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by lzz on 17/4/8.
  */
@@ -10,26 +16,33 @@ public class ClientSign {
      * 返回客户端 ip
      * @return
      */
-    public String clientIp(){
-        return "";
-    }
-
-    /**
-     * 返回客户端 cookie uuid
-     */
-    public String clientUuid(){
-        return "";
-    }
-
-    /**
-     * 返回客户端 id
-     * @return
-     */
-    public String clientId(){
-        if( type == "IP" ){
-            return clientIp();
+    public static String clientIp(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ip = "";
+        try {
+            ip = getIpAddr(request);
+        } catch (Exception ignore) {
+            ip = "";
         }
-        return clientUuid();
+        return ip;
     }
 
+    public static String getIpAddr(HttpServletRequest request) throws Exception{
+        String ip = request.getHeader("X-Real-IP");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            return ip;
+        }
+        ip = request.getHeader("X-Forwarded-For");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            // 多次反向代理后会有多个IP值，第一个为真实IP。
+            int index = ip.indexOf(',');
+            if (index != -1) {
+                return ip.substring(0, index);
+            } else {
+                return ip;
+            }
+        } else {
+            return request.getRemoteAddr();
+        }
+    }
 }

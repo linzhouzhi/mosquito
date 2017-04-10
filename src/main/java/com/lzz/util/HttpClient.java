@@ -89,7 +89,8 @@ public class HttpClient {
             HttpResponse response = client.execute(request);
 
             /**请求发送成功，并得到响应**/
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            int httpStatus = response.getStatusLine().getStatusCode();
+            if (httpStatus == HttpStatus.SC_OK) {
                 /**读取服务器返回过来的json字符串数据**/
                 String strResult = EntityUtils.toString(response.getEntity());
                 /**把json字符串转换成json对象**/
@@ -98,8 +99,41 @@ public class HttpClient {
             } else {
                 logger.error("get请求提交失败:" + url);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("get请求提交失败:" + url, e);
+        }
+        return jsonResult;
+    }
+
+    public static JSONObject urlPing( String url ){
+        //get请求返回结果
+        JSONObject jsonResult = new JSONObject();
+        jsonResult.put("errorCode", 0);
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+            //发送get请求
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = client.execute(request);
+
+            /**请求发送成功，并得到响应**/
+            int httpStatus = response.getStatusLine().getStatusCode();
+            if (httpStatus != HttpStatus.SC_OK) {
+                JSONObject message = new JSONObject();
+                message.put("errorCode", httpStatus);
+                message.put("errorMessage", "get 请求失败错误代码：" + httpStatus );
+                logger.error("get请求提交失败:" + url);
+                return message;
+            }
+        } catch (Exception e) {
+            JSONObject message = new JSONObject();
+            message.put("errorCode", 1);
+            String mesg = e.getMessage();
+            if(mesg.length() > 240 ){
+                mesg = mesg.substring(0, 240);
+            }
+            message.put("errorMessage", "get 请求失败错误信息：" +  mesg);
+            logger.error("get请求提交失败:" + url, e);
+            return message;
         }
         return jsonResult;
     }

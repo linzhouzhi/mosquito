@@ -25,6 +25,7 @@ public class Wechat {
         if( accessToken == null ){
             setAccessToken();
         }
+        logger.info("accessToken 的值是："+accessToken);
         return accessToken;
     }
 

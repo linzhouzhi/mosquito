@@ -18,7 +18,7 @@ public class WechatTest {
 
     @Test
     public void messageSendTest(){
-        boolean res = Wechat.sendTextMessage("linzhouzhi", "报警邮件去看一下啊！！！");
+        boolean res = Wechat.sendTextMessage("linzhouzhi|lzz363216", "报警邮件去看一下啊！！！");
         System.out.println(res);
     }
 

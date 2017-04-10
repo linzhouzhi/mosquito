@@ -43,21 +43,24 @@
                     <div class="col-md-8" style="margin: 0 auto">
                         <div style="clear: both"></div>
                         <div class="form-group" style="width: 90%">
+                            <label> 添加 role-name</label>
+                            <input type="text" name="role_name" class="form-control" placeholder="service1预警"></input>
+                        </div>
+                        <div class="form-group" style="width: 90%">
                             <label> 添加 service</label>
                             <input type="text" name="service" class="form-control" placeholder="service001"></input>
                             <ul class="typeahead dropdown-menu all-service" role="listbox" style="top: 59px; left: 15px;display:none">
-                                <li class="dropdown-li"><a class="dropdown-item">PHP</a></li>
-                                <li class="dropdown-li"><a class="dropdown-item">PostgreSQL</a></li>
+                                <li class="dropdown-li" th:each="item : ${apps}"><a class="dropdown-item" th:text="${item.service}"></a></li>
                             </ul>
                         </div>
                         <div class="form-group" style="width: 90%">
                             <label> 报警类型</label>
                             <div>
                                 <label class="radio-inline">
-                                    <input type="radio" name="type" aria-controls="ping">ping</input>
+                                    <input type="radio" name="type" value="ping" aria-controls="ping">ping</input>
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="type" aria-controls="error_log">error log</input>
+                                    <input type="radio" name="type" value="error_log" aria-controls="error_log">error log</input>
                                 </label>
 
                                 <ul id="role-type" class="nav nav-tabs hidden" role="tablist">
@@ -70,16 +73,16 @@
                                     <div role="tabpanel" class="tab-pane active" id="ping">
                                         <div class="form-group">
                                             <label> 添加 url</label>
-                                            <input type="text" name="url" class="form-control" placeholder="service001"></input>
+                                            <input type="text" name="ping_url" class="form-control" placeholder="http://127.0.0.1:80"></input>
                                         </div>
                                         <div class="form-group">
                                             <label> 选择超时时间</label>
-                                            <select class="form-control">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
+                                            <select name="ping_timeout" class="form-control">
+                                                <option value="5000">5s</option>
+                                                <option value="10000">10s</option>
+                                                <option value="15000">15s</option>
+                                                <option value="20000">20s</option>
+                                                <option value="25000">25s</option>
                                             </select>
                                         </div>
                                     </div>
@@ -95,7 +98,7 @@
                                     <td th:text="${item.key}" valign="top"></td>
                                     <td>
                                         <label class="checkbox-inline" th:each="user : ${item.value}">
-                                            <input type="checkbox" name="members" value="option1" th:text="${user.userid}"></input>
+                                            <input type="checkbox" name="members" th:attr="value=${user.userid}" th:text="${user.userid}"></input>
                                         </label>
                                         <label class="checkbox-inline">
                                             <input type="checkbox" name="all_members" value="">@all</input>
@@ -106,7 +109,7 @@
                             </table>
                         </div>
 
-                        <button type="submit" id="commad-submit" style="width:90%" class="btn btn-default btn-block">Submit</button>
+                        <button type="submit" id="role-submit" style="width:90%" class="btn btn-default btn-block">Submit</button>
                     </div><!-- .col-md-4 -->
                 </div><!-- .panel-body -->
             </div><!-- .panel -->
@@ -114,10 +117,28 @@
     </div><!-- .container -->
 </div><!-- .container-fluid -->
 
+<!-- Modal -->
+<div class="modal fade" id="para_list_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                确认提交？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">no</button>
+                <button type="button" class="btn btn-primary" id="submit-role-form">yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="../vender/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <script src="../vender/bootstrap3-typeahead.js"></script>
-<script>
+<script src="../js/mosquito.js"></script>
+<script th:inline="JavaScript">
+/*<![CDATA[*/
+
     $("input[aria-controls='ping']").trigger("click");
     $("input[aria-controls='ping']").click(function () {
         $("a[aria-controls='ping']").click();
@@ -127,7 +148,12 @@
     });
 
     //******************  添加服务器
-    var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];
+    var apps = /*[[${apps}]]*/;
+    var app_names = [];
+    for( var i in apps ){
+        app_names.push( apps[i]["SERVICE"] )
+    }
+    var subjects = app_names;
     var allService = '';
     $("input[name='service']").typeahead({
         source: subjects
@@ -160,13 +186,120 @@
         }, 500);
     });
 
-    //************** 选择成员
+    //************** 选择所有成员
     $("input[name='all_members']").click(function () {
         var checkboxs = $(this).parent(".checkbox-inline").prevAll().trigger("click");
         console.log(checkboxs);
     });
 
+    // ************* 表单检查
+    // 检查 input
+    function input_check() {
+        $("input[type='text']:visible").parent(".form-group").removeClass("has-error");
+        var input_list = $("input[type='text']:visible");
+        var flag = true;
+        for( var i = 0; i < input_list.length; i++ ){
+            var item = $(input_list[i]);
+            if( item.val().trim() == ""){
+                item.parent(".form-group").addClass("has-error");
+                if( flag == true ){
+                    flag = false;
+                }
+            }
+        }
+        var checkbox_arr = [];
+        $('input[name="members"]:checked').each(function(){
+            checkbox_arr.push( $(this).val() );
+        });
+        if( checkbox_arr.length == 0 ){
+            $("input[name='members']").parents(".form-group").addClass("has-error");
+            flag= false;
+        }
+        return flag;
+    }
 
+    // 表单检查
+    $( document ).on( 'focus', 'input', function () {
+        $(this).parents(".form-group").removeClass("has-error");
+    } );
+    $( document ).on( 'blur', 'input', function () {
+        if( $(this).val().trim() == "" ){
+            $(this).parent(".form-group").addClass("has-error");
+        }
+    } );
+
+    // ************* 表单提交
+    $("#role-submit").click(function () {
+        // 检查 input 是否为空
+        if( input_check() == false ){
+            return;
+        }
+        var request_data = {};
+        request_data.service = $('input[name="service"]').val();
+        request_data.role_name = $('input[name="role_name"]').val();
+        var type = $('input[name="type"]:checked').val();
+        if( type == "ping" ){
+            request_data.ping_url = $('input[name="ping_url"]').val();
+            request_data.ping_timeout = $('select[name="ping_timeout"] option:selected').val();
+        }
+        var checkbox_arr = [];
+        $('input[name="members"]:checked').each(function(){
+            checkbox_arr.push( $(this).val() );
+        });
+        request_data.type = type;
+        request_data.members = unique(checkbox_arr).join("|");
+
+        $("#submit-role-form").data("request", request_data);
+        $('#para_list_modal').modal('show');
+    });
+    $("#submit-role-form").click(function () {
+        var request_data = $("#submit-role-form").data("request");
+        request_data = JSON.stringify(request_data);
+        set_cookie("role_form_data", request_data);
+        console.log(request_data);
+        $.ajax({
+            url:'/role/role_submit_ajax',
+            type:'POST',
+            contentType: 'application/json',
+            async:true,
+            data:request_data,
+            timeout:5000,
+            dataType:'json',
+            success:function(data){
+                $("[data-dismiss='modal']").trigger("click");
+            }
+        });
+    });
+    //**********从cookie中取值初始化表单
+    function init_form() {
+        var role_form_str = get_cookie("role_form_data");
+        var role_form_value = JSON.parse(role_form_str);
+        $("input[name='service']").val(role_form_value.service);
+        $("input[name='role_name']").val(role_form_value.role_name);
+        $("input[name='ping_url']").val(role_form_value.ping_url);
+        $("input[name='type'][value='"+role_form_value.type+"']").trigger("click");
+        $("select").find("option[value='"+role_form_value.ping_timeout+"']").attr("selected",true);
+        var members = role_form_value.members.split("|");
+        for (index in members){
+            $("input[name='members'][value='"+members[index]+"']").attr("checked", true);
+        }
+    }
+    // 数组去重，因为选择成员不需要重复
+    function unique(arr) {
+        var result = [], hash = {};
+        for (var i = 0, elem; (elem = arr[i]) != null; i++) {
+            if (!hash[elem]) {
+                result.push(elem);
+                hash[elem] = true;
+            }
+        }
+        return result;
+    }
+
+    $(function () {
+        init_form();
+    })
+/*]]>*/
 </script>
 </body>
 </html>
