@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label> 选择超时时间</label>
-                                            <select name="ping_timeout" class="form-control">
+                                            <select name="metric" class="form-control">
                                                 <option value="5000">5s</option>
                                                 <option value="10000">10s</option>
                                                 <option value="15000">15s</option>
@@ -240,7 +240,7 @@
         var type = $('input[name="type"]:checked').val();
         if( type == "ping" ){
             request_data.ping_url = $('input[name="ping_url"]').val();
-            request_data.ping_timeout = $('select[name="ping_timeout"] option:selected').val();
+            request_data.metric = $('select[name="metric"] option:selected').val();
         }
         var checkbox_arr = [];
         $('input[name="members"]:checked').each(function(){
@@ -278,7 +278,7 @@
         $("input[name='role_name']").val(role_form_value.role_name);
         $("input[name='ping_url']").val(role_form_value.ping_url);
         $("input[name='type'][value='"+role_form_value.type+"']").trigger("click");
-        $("select").find("option[value='"+role_form_value.ping_timeout+"']").attr("selected",true);
+        $("select").find("option[value='"+role_form_value.metric+"']").attr("selected",true);
         var members = role_form_value.members.split("|");
         for (index in members){
             $("input[name='members'][value='"+members[index]+"']").attr("checked", true);

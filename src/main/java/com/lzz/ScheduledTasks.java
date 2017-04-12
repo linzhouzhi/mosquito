@@ -21,7 +21,7 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 60000)
     public void reportPingStatus() {
         Roles roles = new Roles();
         List<LinkedCaseInsensitiveMap> role_list = roles.selectRole();
@@ -39,7 +39,7 @@ public class ScheduledTasks {
                 log.put("type", role.get("type"));
                 log.put("service", role.get("service"));
                 log.put("ping_url", role.get("ping_url"));
-                log.put("ping_timeout", role.get("ping_timeout"));
+                log.put("metric", role.get("metric"));
                 log.put("members", role.get("members"));
                 log.put("error_code", res.get("errorCode"));
                 log.put("error_message", res.get("errorMessage"));

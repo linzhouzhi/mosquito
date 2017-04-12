@@ -22,11 +22,11 @@ public class Roles {
         String service = reqData.getString("service");
         String type = reqData.getString("type");
         String pingUrl = reqData.getString("ping_url");
-        int pingTimeout = reqData.getInt("ping_timeout");
+        String metric = reqData.getString("metric");
         String members = reqData.getString("members");
         int add_time = (int) new Date().getTime();
-        String sql = "insert into roles(service, role_name, type, ping_url, ping_timeout, client_id, members, add_time) " +
-                "VALUES ('"+ role_name+"','"+ service+"','"+type+"','"+pingUrl+"',"+pingTimeout+",'"+clientIp+"','"+members+"'," + add_time + ")";
+        String sql = "insert into roles(service, role_name, type, ping_url, metric, client_id, members, add_time) " +
+                "VALUES ('"+ role_name+"','"+ service+"','"+type+"','"+pingUrl+"',"+metric+",'"+clientIp+"','"+members+"'," + add_time + ")";
         int res = Sqlite.getSqlite().insert(sql);
         if( res == 0 ){
             return false;

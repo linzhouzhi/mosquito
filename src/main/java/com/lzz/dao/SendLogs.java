@@ -1,5 +1,6 @@
 package com.lzz.dao;
 
+import com.lzz.util.CommonUtil;
 import com.lzz.util.Sqlite;
 import net.sf.json.JSONObject;
 
@@ -16,14 +17,20 @@ public class SendLogs {
         String service = reqData.getString("service");
         String type = reqData.getString("type");
         String pingUrl = reqData.getString("ping_url");
-        int pingTimeout = reqData.getInt("ping_timeout");
+        String metric = reqData.getString("metric");
         String errorMessage = reqData.getString("error_message");
         int errorCode = reqData.getInt("error_code");
         String members = reqData.getString("members");
         int add_time = (int) new Date().getTime();
 
-        String sql = "insert into send_logs(roleid, service, type, ping_url, ping_timeout, error_message, error_code, members, add_time) " +
-                "VALUES ("+ roleId+",'"+ service+"','"+ type+"','"+pingUrl+"',"+pingTimeout+",'"+errorMessage+"',"+errorCode+",'"+members+"'," + add_time + ")";
+        String sql = "insert into send_logs(roleid, service, type, ping_url, metric, error_message, error_code, members, add_time, day, hour, minute) " +
+                "VALUES ("+ roleId+",'"+ service+"'," +
+                "'"+ type+"','"+pingUrl+"',"+metric+"," +
+                "'"+errorMessage+"',"+errorCode+"," +
+                "'"+members+"'," + add_time + "," +
+                CommonUtil.getDay() + "," +
+                CommonUtil.getHour() + "," +
+                CommonUtil.getMinute() + ")";
         int res = Sqlite.getSqlite().insert(sql);
         if( res == 0 ){
             return false;

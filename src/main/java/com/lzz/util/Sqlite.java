@@ -48,7 +48,7 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "type VARCHAR(20), " +
                 "ping_url VARCHAR(255), " +
-                "ping_timeout int, " +
+                "metric VARCHAR(20), " +
                 "client_id VARCHAR(255), " +
                 "members VARCHAR(255), " +
                 "add_time int)");
@@ -59,11 +59,15 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "type VARCHAR(20), " +
                 "ping_url VARCHAR(255), " +
-                "ping_timeout int, " +
+                "metric VARCHAR(20), " +
                 "error_message VARCHAR(255), " +
                 "error_code int, " +
                 "members VARCHAR(255), " +
-                "add_time int)");
+                "add_time int," +
+                "day int," +
+                "hour int," +
+                "minute int," +
+                ")");
         return true;
     }
 

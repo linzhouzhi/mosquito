@@ -25,4 +25,15 @@ public class RoleRestController {
         roleLogic.addRole(jsonObject);
         return new JSONObject();
     }
+
+    /**
+     * 报警接口，用户可以直接 curl 将数据发送过来
+     */
+    @RequestMapping(value="role/add_log", method = RequestMethod.POST)
+    public JSONObject add_log(@RequestBody String requestBody){
+        // 根据目的主机 ip 生成 service name 写入到 roles 并设置 status -1 (表示不走定时任务),获取 roleid
+        // 根据 roleID 和传递过来的数据写入到 log
+        // 判断是否报警
+        return new JSONObject();
+    }
 }

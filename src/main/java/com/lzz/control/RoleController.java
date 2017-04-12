@@ -43,7 +43,7 @@ public class RoleController {
                 int value = roleGroup.get(key);
                 roleGroup.put(key, ++value);
             }else{
-                roleGroup.put(key, 0);
+                roleGroup.put(key, 1);
             }
 
             String key2 = (String) ((LinkedCaseInsensitiveMap)logs.get(i)).get("service");
@@ -51,7 +51,7 @@ public class RoleController {
                 int value = appGroup.get(key);
                 appGroup.put(key2, ++value);
             }else{
-                appGroup.put(key2, 0);
+                appGroup.put(key2, 1);
             }
         }
         model.addAttribute("role", role );
