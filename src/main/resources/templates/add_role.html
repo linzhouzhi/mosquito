@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label> 选择超时时间</label>
-                                            <select name="metric" class="form-control">
+                                            <select name="ping_timeout" class="form-control">
                                                 <option value="5000">5s</option>
                                                 <option value="10000">10s</option>
                                                 <option value="15000">15s</option>
@@ -151,9 +151,9 @@
     var apps = /*[[${apps}]]*/;
     var app_names = [];
     for( var i in apps ){
-        app_names.push( apps[i]["SERVICE"] )
+        app_names.push( apps[i].ge)
     }
-    var subjects = app_names;
+    var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];
     var allService = '';
     $("input[name='service']").typeahead({
         source: subjects
@@ -236,11 +236,11 @@
         }
         var request_data = {};
         request_data.service = $('input[name="service"]').val();
-        request_data.role_name = $('input[name="role_name"]').val();
+        request_data.roleName = $('input[name="role_name"]').val();
         var type = $('input[name="type"]:checked').val();
         if( type == "ping" ){
-            request_data.ping_url = $('input[name="ping_url"]').val();
-            request_data.metric = $('select[name="metric"] option:selected').val();
+            request_data.pingUrl = $('input[name="ping_url"]').val();
+            request_data.pingTimeout = $('select[name="ping_timeout"] option:selected').val();
         }
         var checkbox_arr = [];
         $('input[name="members"]:checked').each(function(){
@@ -275,10 +275,10 @@
         var role_form_str = get_cookie("role_form_data");
         var role_form_value = JSON.parse(role_form_str);
         $("input[name='service']").val(role_form_value.service);
-        $("input[name='role_name']").val(role_form_value.role_name);
-        $("input[name='ping_url']").val(role_form_value.ping_url);
+        $("input[name='role_name']").val(role_form_value.roleName);
+        $("input[name='ping_url']").val(role_form_value.pingUrl);
         $("input[name='type'][value='"+role_form_value.type+"']").trigger("click");
-        $("select").find("option[value='"+role_form_value.metric+"']").attr("selected",true);
+        $("select").find("option[value='"+role_form_value.pingTimeout+"']").attr("selected",true);
         var members = role_form_value.members.split("|");
         for (index in members){
             $("input[name='members'][value='"+members[index]+"']").attr("checked", true);

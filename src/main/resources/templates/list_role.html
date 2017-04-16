@@ -49,7 +49,7 @@
         <div class="row" style="margin-bottom: 10px">
             <div>
                 <div class="form-group">
-                    <label class="col-sm-1 control-label">role list</label>
+                    <label class="col-sm-1 control-label">  roles</label>
                     <div class="col-sm-3">
                         <select class="form-control select-role">
                             <option><a href="#"> select role ... </a></option>
@@ -58,13 +58,18 @@
                     </div>
                 </div><!-- .form-group -->
                 <div class="form-group">
-                    <label class="col-sm-1 control-label">app list</label>
+                    <label class="col-sm-1 control-label">   services</label>
                     <div class="col-sm-3">
-                        <select class="form-control select-app">
-                            <option><a href="#"> select app ...</a></option>
-                            <option th:each="item : ${apps}" th:attr="value=${item.service}" th:text="${item.service}">1</option>
+                        <select class="form-control select-service">
+                            <option><a href="#"> select service ...</a></option>
+                            <option th:each="item : ${services}" th:attr="value=${item.service}" th:text="${item.service}">1</option>
                         </select>
                     </div>
+                </div><!-- .form-group -->
+                <div class="form-group" style="padding-top:5px" id="select-time" data-type="minute">
+                    <a class="select-time label label-primary" data-type="day">day</a>
+                    <a class="select-time label label-success" data-type="hour">hour</a>
+                    <a class="select-time label label-info" data-type="minute">minute</a>
                 </div><!-- .form-group -->
             </div>
         </div><!-- .row -->
@@ -98,7 +103,7 @@
                             <td th:text="${item.roleid}">roleid</td>
                             <td th:text="${item.type}">type</td>
                             <td th:text="${item.ping_url}">ping_url</td>
-                            <td th:text="${item.metric}">metric</td>
+                            <td th:text="${item.metric_value}">metric</td>
                             <td th:text="${item.error_message}">error_message</td>
                             <td th:text="${item.error_code}">error_code</td>
                             <td th:text="${item.members}">members</td>
@@ -122,25 +127,41 @@
 /*<![CDATA[*/
     $(function () {
         var role = /*[[${role}]]*/;
-        var app = /*[[${app}]]*/;
+        var service = /*[[${service}]]*/;
+        var timeType = /*[[${timeType}]]*/;
         var role_list = /*[[${role_list}]]*/;
 
-        if( role == "" && app == "" ){
+        if( role == "" && service == "" ){
             role = role_list[0]['ID'];
             $("select").find("option[value='"+ role +"']").attr("selected",true);
         }else{
             $("select").find("option[value='"+ role +"']").attr("selected",true);
-            $("select").find("option[value='"+ app +"']").attr("selected",true);
+            $("select").find("option[value='"+ service +"']").attr("selected",true);
+            $("#select-time").data("type", timeType);
         }
 
         var url = "/role/list?";
         $(".select-role").change(function () {
             var value = $(this).val();
-            window.location.href = url + "role=" + value;
+            var timeType = $("#select-time").data("type");
+            window.location.href = url + "role=" + value + "&timeType=" + timeType;
         });
-        $(".select-app").change(function () {
+        $(".select-service").change(function () {
             var value = $(this).val();
-            window.location.href = url + "app=" + value;
+            var timeType = $("#select-time").data("type");
+            window.location.href = url + "service=" + value + "&timeType=" + timeType;
+        });
+        $("a.select-time").click(function () {
+            var timeType = $(this).data("type");
+            var role = $(".select-role > option[selected='selected']").val();
+            if( typeof(role) == "undefined" ){
+                role = "";
+            }
+            var service = $(".select-service > option[selected='selected']").val();
+            if( typeof(service) == "undefined" ){
+                service = "";
+            }
+            window.location.href = url + "service=" + service + "&role=" + role + "&timeType=" + timeType;
         });
     });
 

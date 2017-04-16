@@ -24,18 +24,18 @@ public class RoleController {
         JSONObject userList = roleLogic.getUserList();
         System.out.println(userList);
         model.addAttribute("userLsit", userList );
-        List apps = roleLogic.getApps();
+        List apps = roleLogic.getServices();
         System.out.println(apps);
         model.addAttribute("apps", apps );
         return "add_role";
     }
 
     @RequestMapping("/role/list")
-    public String list(@RequestParam(value="role", required=false, defaultValue="") String role, @RequestParam(value="app", required=false, defaultValue="") String app,Model model) {
+    public String list(@RequestParam(value="role", defaultValue="") String role, @RequestParam(value="service", defaultValue="") String service, @RequestParam(value="timeType", defaultValue="minute") String timeType,Model model) {
         List roles = roleLogic.getRoles();
-        List apps = roleLogic.getApps();
+        List services = roleLogic.getServices();
         List logs = roleLogic.getLogs();
-        HashMap<String, Integer> appGroup = new HashMap<String, Integer>();
+        HashMap<String, Integer> serviceGroup = new HashMap<String, Integer>();
         HashMap<Integer, Integer> roleGroup = new HashMap<Integer, Integer>();
         for( int i = 0; i < logs.size(); i++ ){
             Integer key = (Integer) ((LinkedCaseInsensitiveMap)logs.get(i)).get("roleid");
@@ -47,19 +47,20 @@ public class RoleController {
             }
 
             String key2 = (String) ((LinkedCaseInsensitiveMap)logs.get(i)).get("service");
-            if( appGroup.containsKey(key) ){
-                int value = appGroup.get(key);
-                appGroup.put(key2, ++value);
+            if( serviceGroup.containsKey(key) ){
+                int value = serviceGroup.get(key);
+                serviceGroup.put(key2, ++value);
             }else{
-                appGroup.put(key2, 1);
+                serviceGroup.put(key2, 1);
             }
         }
         model.addAttribute("role", role );
-        model.addAttribute("app", app );
+        model.addAttribute("service", service );
+        model.addAttribute("timeType", timeType );
         model.addAttribute("role_group", roleGroup );
-        model.addAttribute("app_group", appGroup );
+        model.addAttribute("service_group", serviceGroup );
         model.addAttribute("role_list", roles );
-        model.addAttribute("apps", apps );
+        model.addAttribute("services", services );
         model.addAttribute("logs", logs );
         return "list_role";
     }

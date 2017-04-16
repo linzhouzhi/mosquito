@@ -1,13 +1,12 @@
 package com.lzz;
 
+import com.lzz.dao.Logs;
 import com.lzz.dao.Roles;
-import com.lzz.dao.SendLogs;
 import com.lzz.util.HttpClient;
 import com.lzz.util.Wechat;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -21,10 +20,10 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(fixedRate = 60000)
+    //@Scheduled(fixedRate = 60000)
     public void reportPingStatus() {
         Roles roles = new Roles();
-        List<LinkedCaseInsensitiveMap> role_list = roles.selectRole();
+        List<LinkedCaseInsensitiveMap> role_list = roles.getPingRoles();
         for( int i = 0; i < role_list.size(); i++ ){
             System.out.println(role_list.get(i));
             LinkedCaseInsensitiveMap role = (LinkedCaseInsensitiveMap)role_list.get(i);
@@ -34,17 +33,16 @@ public class ScheduledTasks {
             System.out.println(res);
             System.out.println("----------");
             if( res.getInt("errorCode") != 0 ){
-                JSONObject log = new JSONObject();
-                log.put("roleid", role.get("id"));
-                log.put("type", role.get("type"));
-                log.put("service", role.get("service"));
-                log.put("ping_url", role.get("ping_url"));
-                log.put("metric", role.get("metric"));
-                log.put("members", role.get("members"));
-                log.put("error_code", res.get("errorCode"));
-                log.put("error_message", res.get("errorMessage"));
-                SendLogs sendLogs = new SendLogs();
-                sendLogs.insertSendLogs(log);
+                com.lzz.model.Logs logs = new com.lzz.model.Logs();
+                logs.setRoleid((Integer) role.get("id"));
+                logs.setType((String) role.get("type"));
+                logs.setService((String) role.get("service"));
+                logs.setPingUrl((String) role.get("ping_url"));
+                logs.setMetric((Integer) role.get("metric"));
+                logs.setMembers((String) role.get("members"));
+                logs.setErrorMessage((String) role.get(res.get("errorMessage")));
+                Logs sendLogs = new Logs();
+                sendLogs.insertLogs(logs);
                 Wechat.sendTextMessage(members, url + "请求失败！！" + res.getString("errorMessage"));
             }
         }

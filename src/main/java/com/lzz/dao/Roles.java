@@ -2,10 +2,10 @@ package com.lzz.dao;
 
 import com.lzz.util.ClientSign;
 import com.lzz.util.Sqlite;
-import net.sf.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lzz on 17/4/10.
@@ -13,42 +13,67 @@ import java.util.List;
 public class Roles {
     /**
      * 添加一条 报警规则
-     * @param reqData
+     * @param roles
      * @return
      */
-    public boolean insertRole(JSONObject reqData){
-        String clientIp = ClientSign.clientIp();
-        String role_name = reqData.getString("role_name");
-        String service = reqData.getString("service");
-        String type = reqData.getString("type");
-        String pingUrl = reqData.getString("ping_url");
-        String metric = reqData.getString("metric");
-        String members = reqData.getString("members");
+    public int insertRole(com.lzz.model.Roles roles){
+        String clientIp = roles.getClientId();
+        if( clientIp == "" || clientIp == null ){
+            clientIp = ClientSign.clientIp();
+        }
+        if( clientIp.equals("0:0:0:0:0:0:0:1") ){
+            clientIp = "127.0.0.1";
+        }
+        String role_name = roles.getRoleName();
+        String service = roles.getService();
+        String type = roles.getType();
+        String pingUrl = roles.getPingUrl();
+        int metric = roles.getMetric();
+        String members = roles.getMembers();
         int add_time = (int) new Date().getTime();
-        String sql = "insert into roles(service, role_name, type, ping_url, metric, client_id, members, add_time) " +
+        String sql = "insert into roles(role_name, service, type, ping_url, metric, client_id, members, add_time) " +
                 "VALUES ('"+ role_name+"','"+ service+"','"+type+"','"+pingUrl+"',"+metric+",'"+clientIp+"','"+members+"'," + add_time + ")";
         int res = Sqlite.getSqlite().insert(sql);
-        if( res == 0 ){
-            return false;
-        }
-        return true;
+        return res;
     }
 
-    public List selectRole(String clientid){
-        String sql = "select * from roles where client_id='" + clientid + "'";
-        List list = Sqlite.getSqlite().select(sql);
-        return list;
+    public Map selectRole(String clientId){
+        String sql = "select * from roles where client_id='" + clientId + "'";
+        Map resMap = Sqlite.getSqlite().selectRow(sql);
+        return resMap;
     }
 
     /**
      * 选择所有 role
      * @return
      */
-    public List selectRole(){
-        String sql = "select * from roles";
+    public List selectRoles( String clientId ){
+        String sql = "select * from roles where client_id='" + clientId + "'";
         List list = Sqlite.getSqlite().select(sql);
         System.out.println(list);
         return list;
+    }
+
+    /**
+     *  获取 ping 类型的 roles
+     * @return
+     */
+    public List getPingRoles(){
+        String sql = "select * from roles where type='ping'";
+        List list = Sqlite.getSqlite().select(sql);
+        System.out.println(list);
+        return list;
+    }
+
+    public int getRoleId( String roleName ){
+        String sql = "select id from roles where role_name='" + roleName + "'";
+        System.out.println( sql );
+        Map map = Sqlite.getSqlite().selectRow( sql );
+        if( map == null ){
+            return -1;
+        }
+        int roleId = (int) map.get("id");
+        return roleId;
     }
 
     public List selectApp(){

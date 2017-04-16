@@ -1,5 +1,6 @@
 package com.lzz.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,7 +11,7 @@ public class CommonUtil {
     public static int getDay(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime( new Date() );
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int day = Integer.parseInt((new SimpleDateFormat("yyyyMMdd")).format(calendar.getTime()));
         return day;
     }
     public static int getHour(){
@@ -24,6 +25,14 @@ public class CommonUtil {
         calendar.setTime( new Date() );
         int minute = calendar.get(Calendar.MINUTE);
         return minute;
+    }
+
+    /**
+     * 获取当前时间戳
+     * @return
+     */
+    public static int getTime(){
+        return (int) new Date().getTime();
     }
 
 }
