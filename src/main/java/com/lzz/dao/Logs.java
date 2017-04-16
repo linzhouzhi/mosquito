@@ -1,5 +1,6 @@
 package com.lzz.dao;
 
+import com.lzz.util.Common;
 import com.lzz.util.CommonUtil;
 import com.lzz.util.Sqlite;
 
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Created by lzz on 17/4/10.
  */
-public class Logs {
+public class Logs implements Common{
 
     public static boolean insertLogs(com.lzz.model.Logs logs){
         int roleId = logs.getRoleid();
@@ -19,7 +20,7 @@ public class Logs {
         String errorMessage = logs.getErrorMessage();
         int errorCode = logs.getErrorCode();
         String members = logs.getMembers();
-        int add_time = logs.getAddTime();
+        long add_time = logs.getAddTime();
 
         String sql = "insert into logs(roleid, service, type, ping_url, metric_value, error_message, error_code, members, add_time, day, hour, minute) " +
                 "VALUES ("+ roleId+",'"+ service+"'," +
@@ -36,10 +37,52 @@ public class Logs {
         return true;
     }
 
-    public List selectSendLogs(){
+    public List selectLogs(){
         String sql = "select * from logs";
         List list = Sqlite.getSqlite().select(sql);
         System.out.println(list);
+        return list;
+    }
+
+    public List selectByRoleidGroupLogs(int roleid, String timeType, int dateTime){
+        String sql = "";
+        if( timeType.equals("minute") ){
+            sql = "select concat(hour,':',minute) as date,count(*) as c from logs where add_time > " + dateTime+ " and roleid=" +roleid+ " group by hour," + timeType;
+        }else if( timeType.equals("hour") ){
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and roleid=" +roleid+ " group by day," + timeType;
+        }else{
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and roleid=" +roleid+ " group by " + timeType;
+        }
+        System.out.println(sql);
+        List list = Sqlite.getSqlite().select(sql);
+        System.out.println(list);
+        return list;
+    }
+
+    public List selectByServiceGroupLogs(String service, String timeType, int dateTime){
+        String sql = "";
+        if( timeType.equals("minute") ){
+            sql = "select concat(hour,':',minute) as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' group by hour," + timeType;
+        }else if( timeType.equals("hour") ){
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' group by day," + timeType;
+        }else{
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' group by " + timeType;
+        }
+        System.out.println(sql);
+        List list = Sqlite.getSqlite().select(sql);
+        System.out.println(list);
+        return list;
+    }
+
+    public List selectLogsByRoleid(String roleId, int dateTime){
+        String sql = "select * from logs where add_time > " + dateTime+ " and roleid='" + roleId + "' limit " + LIMIT;
+        List list = Sqlite.getSqlite().select( sql );
+        return list;
+    }
+
+    public List selectLogsByService(String service, int dateTime){
+        String sql = "select * from logs where add_time > " + dateTime+ " and service='" + service + "' limit " + LIMIT;
+        List list = Sqlite.getSqlite().select( sql );
         return list;
     }
 }

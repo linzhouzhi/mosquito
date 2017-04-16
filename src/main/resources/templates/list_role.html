@@ -49,7 +49,7 @@
         <div class="row" style="margin-bottom: 10px">
             <div>
                 <div class="form-group">
-                    <label class="col-sm-1 control-label">  roles</label>
+                    <label class="col-sm-1 control-label" style="width:40px">  roles</label>
                     <div class="col-sm-3">
                         <select class="form-control select-role">
                             <option><a href="#"> select role ... </a></option>
@@ -67,9 +67,9 @@
                     </div>
                 </div><!-- .form-group -->
                 <div class="form-group" style="padding-top:5px" id="select-time" data-type="minute">
-                    <a class="select-time label label-primary" data-type="day">day</a>
-                    <a class="select-time label label-success" data-type="hour">hour</a>
-                    <a class="select-time label label-info" data-type="minute">minute</a>
+                    <a class="select-time label label-primary" data-type="day">15 day</a>
+                    <a class="select-time label label-success" data-type="hour">24 hour</a>
+                    <a class="select-time label label-info" data-type="minute">30 minute</a>
                 </div><!-- .form-group -->
             </div>
         </div><!-- .row -->
@@ -89,7 +89,7 @@
                             <th>id</th>
                             <th>roleid</th>
                             <th>type</th>
-                            <th>ping_url</th>
+                            <th>service</th>
                             <th>metric</th>
                             <th>error_message</th>
                             <th>error_code</th>
@@ -102,7 +102,7 @@
                             <td th:text="${item.id}">id</td>
                             <td th:text="${item.roleid}">roleid</td>
                             <td th:text="${item.type}">type</td>
-                            <td th:text="${item.ping_url}">ping_url</td>
+                            <td th:text="${item.service}">ping_url</td>
                             <td th:text="${item.metric_value}">metric</td>
                             <td th:text="${item.error_message}">error_message</td>
                             <td th:text="${item.error_code}">error_code</td>
@@ -129,7 +129,9 @@
         var role = /*[[${role}]]*/;
         var service = /*[[${service}]]*/;
         var timeType = /*[[${timeType}]]*/;
+
         var role_list = /*[[${role_list}]]*/;
+        var metrics = /*[[${metrics}]]*/
 
         if( role == "" && service == "" ){
             role = role_list[0]['ID'];
@@ -168,13 +170,12 @@
 
     $("#command-table").dataTable();
 
-    window.role_group = /*[[${role_group}]]*/;
-    window.app_group = /*[[${app_group}]]*/;
+    window.metrics = /*[[${metrics}]]*/;
     var labels = [];
-    var role_count = [];
-    for( var i in role_group){
-        labels.push(i);
-        role_count.push(role_group[i]);
+    var counts = [];
+    for( var i in metrics){
+        labels.push( metrics[i]["date"] );
+        counts.push( metrics[i]["c"] );
     }
     var config = {
         type: 'bar',
@@ -184,7 +185,7 @@
                 label: "count",
                 backgroundColor: window.chartColors.red,
                 borderColor: window.chartColors.red,
-                data: role_count,
+                data: counts,
                 fill: false,
             }]
         },
@@ -207,7 +208,7 @@
                     display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'role id'
+                        labelString: 'metric'
                     }
                 }],
                 yAxes: [{

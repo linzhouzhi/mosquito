@@ -2,11 +2,13 @@ package com.lzz;
 
 import com.lzz.dao.Logs;
 import com.lzz.dao.Roles;
+import com.lzz.util.CommonUtil;
 import com.lzz.util.HttpClient;
 import com.lzz.util.Wechat;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -20,7 +22,7 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    //@Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 60000)
     public void reportPingStatus() {
         Roles roles = new Roles();
         List<LinkedCaseInsensitiveMap> role_list = roles.getPingRoles();
@@ -41,6 +43,7 @@ public class ScheduledTasks {
                 logs.setMetric((Integer) role.get("metric"));
                 logs.setMembers((String) role.get("members"));
                 logs.setErrorMessage((String) role.get(res.get("errorMessage")));
+                logs.setAddTime(CommonUtil.getTime());
                 Logs sendLogs = new Logs();
                 sendLogs.insertLogs(logs);
                 Wechat.sendTextMessage(members, url + "请求失败！！" + res.getString("errorMessage"));

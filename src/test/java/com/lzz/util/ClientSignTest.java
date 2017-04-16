@@ -26,4 +26,10 @@ public class ClientSignTest {
         int minute = calendar.get(Calendar.MINUTE);
         System.out.println(minute);
     }
+
+    @Test
+    public void test2(){
+        long time = CommonUtil.getTime();
+        System.out.println(time);
+    }
 }

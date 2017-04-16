@@ -21,9 +21,7 @@ public class Roles {
         if( clientIp == "" || clientIp == null ){
             clientIp = ClientSign.clientIp();
         }
-        if( clientIp.equals("0:0:0:0:0:0:0:1") ){
-            clientIp = "127.0.0.1";
-        }
+
         String role_name = roles.getRoleName();
         String service = roles.getService();
         String type = roles.getType();
@@ -41,6 +39,18 @@ public class Roles {
         String sql = "select * from roles where client_id='" + clientId + "'";
         Map resMap = Sqlite.getSqlite().selectRow(sql);
         return resMap;
+    }
+
+    /**
+     * 获取 clientID 最新的roleid
+     * @param clientId
+     * @return
+     */
+    public int getLastIdRoles( String clientId ){
+        String sql = "select max(id) as id from roles where client_id='" + clientId + "'";
+        Map resMap = Sqlite.getSqlite().selectRow(sql);
+        int id = (int) resMap.get("id");
+        return id;
     }
 
     /**
@@ -76,7 +86,7 @@ public class Roles {
         return roleId;
     }
 
-    public List selectApp(){
+    public List selectServices(){
         String sql = "select service,count(*) as c from roles group by service";
         List list = Sqlite.getSqlite().select(sql);
         return list;

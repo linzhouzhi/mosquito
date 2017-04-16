@@ -32,7 +32,8 @@ public class CommonUtil {
      * @return
      */
     public static int getTime(){
-        return (int) new Date().getTime();
+        String timestamp = String.valueOf( (new Date().getTime())/1000);
+        return Integer.valueOf(timestamp);
     }
 
 }

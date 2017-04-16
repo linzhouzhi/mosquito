@@ -40,9 +40,6 @@ public class RoleLogic {
     public int addRestRole(com.lzz.model.Roles rolesData){
         Roles roles = new Roles();
         String clientIp = ClientSign.clientIp();
-        if( clientIp.equals("0:0:0:0:0:0:0:1") ){
-            clientIp = "127.0.0.1";
-        }
         String roleName = clientIp + "_" + rolesData.getRoleName();
         System.out.println(roleName + "------------rolename");
         int roleId = roles.getRoleId( roleName );
@@ -62,22 +59,43 @@ public class RoleLogic {
     public List getRoles() {
         Roles roles = new Roles();
         String clientid = ClientSign.clientIp();
-        if( clientid.equals("0:0:0:0:0:0:0:1") ){
-            clientid = "127.0.0.1";
-        }
         List list = roles.selectRoles(clientid);
         return list;
     }
 
     public List getServices(){
         Roles roles = new Roles();
-        List list = roles.selectApp();
+        List list = roles.selectServices();
         return list;
     }
 
-    public List getLogs() {
+    public int getLasteRoleId( String clientIp ){
+        Roles roles = new Roles();
+        int roleId = roles.getLastIdRoles( clientIp );
+        return roleId;
+    }
+
+    public List getLogs(String target, String timeType, String type) {
         Logs logs = new Logs();
-        List list = logs.selectSendLogs();
+        List list = null;
+        int dateTime = getTypeTime( timeType );
+        if( type.equals("role") ){
+            list = logs.selectLogsByRoleid(target, dateTime);
+        }else {
+            list = logs.selectLogsByService(target, dateTime);
+        }
+        return list;
+    }
+
+    public List getMetricGroup(String target, String timeType, String type){
+        Logs logs = new Logs();
+        List list = null;
+        int dateTime = getTypeTime( timeType );
+        if( type.equals("role") ){
+            list = logs.selectByRoleidGroupLogs(Integer.parseInt(target), timeType, dateTime);
+        }else {
+            list = logs.selectByServiceGroupLogs(target, timeType, dateTime);
+        }
         return list;
     }
 
@@ -112,5 +130,21 @@ public class RoleLogic {
         roles.setService( queryParam.getService() );
         roles.setAddTime( CommonUtil.getTime() );
         return roles;
+    }
+
+    public int getTypeTime( String type ){
+        int time = CommonUtil.getTime();
+        switch (type){
+            case "minute":
+                time = time - 30*60;
+                break;
+            case "hour":
+                time = time - 24*60*60;
+                break;
+            case "day":
+                time = time - 30*24*60*60;
+                break;
+        }
+        return time;
     }
 }
