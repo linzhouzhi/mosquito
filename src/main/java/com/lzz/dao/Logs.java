@@ -20,13 +20,14 @@ public class Logs implements Common{
         String errorMessage = logs.getErrorMessage();
         int errorCode = logs.getErrorCode();
         String members = logs.getMembers();
+        String client_id = logs.getClientId();
         long add_time = logs.getAddTime();
 
-        String sql = "insert into logs(roleid, service, type, ping_url, metric_value, error_message, error_code, members, add_time, day, hour, minute) " +
+        String sql = "insert into logs(roleid, service, type, ping_url, metric_value, error_message, error_code, members, client_id, add_time, day, hour, minute) " +
                 "VALUES ("+ roleId+",'"+ service+"'," +
                 "'"+ type+"','"+pingUrl+"',"+metric_value+"," +
                 "'"+errorMessage+"',"+errorCode+"," +
-                "'"+members+"'," + add_time + "," +
+                "'"+members+"'," + "'" + client_id+ "'," + add_time + "," +
                 CommonUtil.getDay() + "," +
                 CommonUtil.getHour() + "," +
                 CommonUtil.getMinute() + ")";
@@ -75,13 +76,13 @@ public class Logs implements Common{
     }
 
     public List selectLogsByRoleid(String roleId, int dateTime){
-        String sql = "select * from logs where add_time > " + dateTime+ " and roleid='" + roleId + "' limit " + LIMIT;
+        String sql = "select * from logs where add_time > " + dateTime+ " and roleid='" + roleId + "' order by add_time desc limit " + LIMIT;
         List list = Sqlite.getSqlite().select( sql );
         return list;
     }
 
     public List selectLogsByService(String service, int dateTime){
-        String sql = "select * from logs where add_time > " + dateTime+ " and service='" + service + "' limit " + LIMIT;
+        String sql = "select * from logs where add_time > " + dateTime+ " and service='" + service + "' order by add_time desc limit " + LIMIT;
         List list = Sqlite.getSqlite().select( sql );
         return list;
     }

@@ -49,6 +49,9 @@ public class Roles {
     public int getLastIdRoles( String clientId ){
         String sql = "select max(id) as id from roles where client_id='" + clientId + "'";
         Map resMap = Sqlite.getSqlite().selectRow(sql);
+        if( resMap.isEmpty() || resMap == null ){
+            return  -1;
+        }
         int id = (int) resMap.get("id");
         return id;
     }

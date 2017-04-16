@@ -93,6 +93,7 @@ public class Sqlite {
                 "error_message VARCHAR(255), " +
                 "error_code int, " +
                 "members VARCHAR(255), " +
+                "client_id VARCHAR(255), " +
                 "add_time int," +
                 "day int," +
                 "hour int," +

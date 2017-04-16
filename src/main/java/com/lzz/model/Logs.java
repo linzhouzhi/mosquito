@@ -13,6 +13,7 @@ public class Logs {
     private String errorMessage;
     private int errorCode;
     private String members;
+    private String clientId;
     private int addTime;
     private int day;
     private int hour;
@@ -80,6 +81,14 @@ public class Logs {
 
     public void setMembers(String members) {
         this.members = members;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public int getAddTime() {

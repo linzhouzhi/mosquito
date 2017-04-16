@@ -42,6 +42,7 @@ public class ScheduledTasks {
                 logs.setPingUrl((String) role.get("ping_url"));
                 logs.setMetric((Integer) role.get("metric"));
                 logs.setMembers((String) role.get("members"));
+                logs.setClientId((String) role.get("client_id"));
                 logs.setErrorMessage((String) role.get(res.get("errorMessage")));
                 logs.setAddTime(CommonUtil.getTime());
                 Logs sendLogs = new Logs();

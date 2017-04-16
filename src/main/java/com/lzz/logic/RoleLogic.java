@@ -103,6 +103,7 @@ public class RoleLogic {
         com.lzz.model.Logs logs = new com.lzz.model.Logs();
         logs.setRoleid( roleId );
         logs.setMembers( queryParam.getMembers() );
+        logs.setClientId( ClientSign.clientIp() );
         logs.setService( queryParam.getService() );
         logs.setErrorMessage( queryParam.getErrorMessage() );
         logs.setMetricValue( queryParam.getMetricValue() );
