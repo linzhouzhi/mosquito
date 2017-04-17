@@ -40,6 +40,9 @@ clientId: 是你的客户端 ip,这样你可以在你的电脑上直接看到你
 curl  -l -H "Content-type: application/json" -X POST -d  '{"metric":3,"metricValue":4,"service":"service1","members":"@all","roleName":"serve-cpu2","clientId":"192.168.1.107"}'  http://localhost:8080/role/add_log
 ```
 
+### 3.4 微信报警结果
+<img src="./src/main/resources/public/images/wechat.jpeg" />
+
 ## 例子
 ### 1 监控链接数
 > 监控 8081 端口到链接，如果超过 3个 我们就进行报警
