@@ -43,7 +43,7 @@ curl  -l -H "Content-type: application/json" -X POST -d  '{"metric":3,"metricVal
 ### 3.4 微信报警结果
 <img src="./src/main/resources/public/images/wechat.jpeg" />
 
-## 例子
+## 四、例子
 ### 1 监控链接数
 > 监控 8081 端口到链接，如果超过 3个 我们就进行报警
 
