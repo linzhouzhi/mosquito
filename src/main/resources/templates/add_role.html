@@ -26,7 +26,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/role/add">add role <span class="sr-only">(current)</span></a></li>
-                <li><a href="/role/list">role statistic</a></li>
+                <li><a href="/role/list">log statistic</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -149,14 +149,14 @@
 
     //******************  添加服务器
     var apps = /*[[${apps}]]*/;
-    var app_names = [];
+    var services = [];
     for( var i in apps ){
-        app_names.push( apps[i].ge)
+        services.push( apps[i].service)
     }
-    var subjects = ['PHP', 'MySQL', 'SQL', 'PostgreSQL', 'HTML', 'CSS', 'HTML5', 'CSS3', 'JSON'];
+
     var allService = '';
     $("input[name='service']").typeahead({
-        source: subjects
+        source: services
     });
 
     $("input[name='service']").click(function () {

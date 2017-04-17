@@ -68,4 +68,16 @@ public class QueryParam {
         this.errorMessage = errorMessage;
     }
 
+    @Override
+    public String toString() {
+        return "QueryParam{" +
+                "clientId='" + clientId + '\'' +
+                ", metric=" + metric +
+                ", metricValue=" + metricValue +
+                ", roleName='" + roleName + '\'' +
+                ", service='" + service + '\'' +
+                ", members='" + members + '\'' +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RoleController {
@@ -38,9 +39,11 @@ public class RoleController {
         }
         List metrics = new ArrayList();
         List logs = new ArrayList<>();
+        Map roleDetail = null;
         if( !role.equals("") && service.equals("") ){
             metrics = roleLogic.getMetricGroup(role, timeType, "role");
             logs = roleLogic.getLogs(role, timeType, "role");
+            roleDetail = roleLogic.getRoleDetail(Integer.parseInt(role));
         }
         if( role.equals("") && !service.equals("") ){
             metrics = roleLogic.getMetricGroup(service, timeType, "service");
@@ -58,6 +61,13 @@ public class RoleController {
         model.addAttribute("services", services );
         model.addAttribute("logs", logs );
         model.addAttribute("metrics", metrics );
+        model.addAttribute("role_detail", roleDetail );
         return "list_role";
+    }
+
+    @RequestMapping("/role/delete")
+    public String deleteRoles(@RequestParam(value="roleid", defaultValue="-1") int roleid){
+        roleLogic.deleteRoleDetail( roleid );
+        return "redirect:/role/list";
     }
 }

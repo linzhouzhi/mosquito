@@ -8,8 +8,8 @@ public class Logs {
     private String service;
     private String type;
     private String pingUrl;
-    private int metricValue;
-    private int metric;
+    private float metricValue;
+    private float metric;
     private String errorMessage;
     private int errorCode;
     private String members;
@@ -51,11 +51,11 @@ public class Logs {
         this.pingUrl = pingUrl;
     }
 
-    public int getMetricValue() {
+    public float getMetricValue() {
         return metricValue;
     }
 
-    public void setMetricValue(int metricValue) {
+    public void setMetricValue(float metricValue) {
         this.metricValue = metricValue;
     }
 
@@ -123,11 +123,11 @@ public class Logs {
         this.minute = minute;
     }
 
-    public int getMetric() {
+    public float getMetric() {
         return metric;
     }
 
-    public void setMetric(int metric) {
+    public void setMetric(float metric) {
         this.metric = metric;
     }
 

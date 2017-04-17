@@ -51,6 +51,11 @@ public class Sqlite {
         return res;
     }
 
+    public int update(String sql){
+        int res = jdbcTpl.update(sql);
+        return res;
+    }
+
     /**
      * 获取 roles 列表
      * @return
@@ -58,6 +63,14 @@ public class Sqlite {
     public List select(String sql){
         List list = jdbcTpl.queryForList(sql);
         return list;
+    }
+
+    public boolean delete( String sql ){
+        int i = jdbcTpl.update( sql );
+        if( i > 0 ){
+            return true;
+        }
+        return false;
     }
 
     public Map selectRow(String sql ){
@@ -78,10 +91,11 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "type VARCHAR(20), " +
                 "ping_url VARCHAR(255), " +
-                "metric INT, " +
+                "metric  float(10,3), " +
                 "client_id VARCHAR(255), " +
                 "members VARCHAR(255), " +
-                "add_time int)");
+                "add_time int," +
+                "send_time int)");
         // 创建 logs 表
         jdbcTpl.execute("create table if not exists logs(" +
                 "id int PRIMARY KEY AUTO_INCREMENT, " +
@@ -89,7 +103,7 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "type VARCHAR(20), " +
                 "ping_url VARCHAR(255), " +
-                "metric_value INT, " +
+                "metric_value float(10,3), " +
                 "error_message VARCHAR(255), " +
                 "error_code int, " +
                 "members VARCHAR(255), " +

@@ -2,9 +2,9 @@ package com.lzz;
 
 import com.lzz.dao.Logs;
 import com.lzz.dao.Roles;
+import com.lzz.logic.RoleLogic;
 import com.lzz.util.CommonUtil;
 import com.lzz.util.HttpClient;
-import com.lzz.util.Wechat;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,23 +31,36 @@ public class ScheduledTasks {
             LinkedCaseInsensitiveMap role = (LinkedCaseInsensitiveMap)role_list.get(i);
             String url = (String) role.get("ping_url");
             String members = (String) role.get("members");
+            int roleId = (int) role.get("id");
+            float metric = (float) role.get("metric");
+
+            // 计算该请求的时间
+            long start = System.currentTimeMillis();
             JSONObject res = HttpClient.urlPing( url );
-            System.out.println(res);
-            System.out.println("----------");
+            long end = System.currentTimeMillis();
+            float runTime = ((end - start)/1000);
+            System.out.println("runTime----------" + runTime);
+            com.lzz.model.Logs logs = new com.lzz.model.Logs();
+            logs.setRoleid( roleId );
+            logs.setType((String) role.get("type"));
+            logs.setService((String) role.get("service"));
+            logs.setPingUrl((String) role.get("ping_url"));
+            logs.setMetricValue(runTime);
+            logs.setMetric(metric);
+            logs.setMembers(members);
+            logs.setClientId((String) role.get("client_id"));
+            logs.setErrorMessage((String) role.get(res.get("errorMessage")));
+            logs.setAddTime(CommonUtil.getTime());
+            Logs sendLogs = new Logs();
+            RoleLogic roleLogic = new RoleLogic();
             if( res.getInt("errorCode") != 0 ){
-                com.lzz.model.Logs logs = new com.lzz.model.Logs();
-                logs.setRoleid((Integer) role.get("id"));
-                logs.setType((String) role.get("type"));
-                logs.setService((String) role.get("service"));
-                logs.setPingUrl((String) role.get("ping_url"));
-                logs.setMetric((Integer) role.get("metric"));
-                logs.setMembers((String) role.get("members"));
-                logs.setClientId((String) role.get("client_id"));
-                logs.setErrorMessage((String) role.get(res.get("errorMessage")));
-                logs.setAddTime(CommonUtil.getTime());
-                Logs sendLogs = new Logs();
                 sendLogs.insertLogs(logs);
-                Wechat.sendTextMessage(members, url + "请求失败！！" + res.getString("errorMessage"));
+                roleLogic.sendMessage( roleId, metric, runTime, (String) res.get("errorMessage"), members);
+            }else{
+                if( runTime > metric ){
+                    sendLogs.insertLogs(logs);
+                    roleLogic.sendMessage( roleId, metric, runTime, (String) res.get("errorMessage"), members);
+                }
             }
         }
     }

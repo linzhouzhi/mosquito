@@ -16,7 +16,7 @@ public class Logs implements Common{
         String service = logs.getService();
         String type = logs.getType();
         String pingUrl = logs.getPingUrl();
-        int metric_value = logs.getMetricValue();
+        float metric_value = logs.getMetricValue();
         String errorMessage = logs.getErrorMessage();
         int errorCode = logs.getErrorCode();
         String members = logs.getMembers();
@@ -43,6 +43,17 @@ public class Logs implements Common{
         List list = Sqlite.getSqlite().select(sql);
         System.out.println(list);
         return list;
+    }
+
+    /**
+     * 通过 id  删除logs
+     * @param roleid
+     * @return
+     */
+    public boolean deleteLogsByRoleid( int roleid ){
+        String sql = "delete from logs where roleid=" + roleid;
+        boolean res = Sqlite.getSqlite().delete( sql );
+        return  res;
     }
 
     public List selectByRoleidGroupLogs(int roleid, String timeType, int dateTime){

@@ -38,7 +38,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="/role/add">add role <span class="sr-only">(current)</span></a></li>
-                <li class="active"><a href="/role/list">role statistic</a></li>
+                <li class="active"><a href="/role/list">log statistic</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -53,7 +53,9 @@
                     <div class="col-sm-3">
                         <select class="form-control select-role">
                             <option><a href="#"> select role ... </a></option>
-                            <option th:each="item : ${role_list}" th:attr="value=${item.id}"><a href="#" th:text="|${item.ID} ${item.ROLE_NAME}|">1</a></option>
+                            <option th:each="item : ${role_list}" th:attr="value=${item.id}">
+                                <a href="#" th:text="|${item.ID} ${item.ROLE_NAME}|">1</a>
+                            </option>
                         </select>
                     </div>
                 </div><!-- .form-group -->
@@ -87,26 +89,20 @@
                         <thead>
                         <tr>
                             <th>id</th>
-                            <th>roleid</th>
                             <th>type</th>
-                            <th>service</th>
                             <th>metric</th>
                             <th>error_message</th>
                             <th>error_code</th>
-                            <th>members</th>
                             <th>add_time</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="item : ${logs}">
                             <td th:text="${item.id}">id</td>
-                            <td th:text="${item.roleid}">roleid</td>
                             <td th:text="${item.type}">type</td>
-                            <td th:text="${item.service}">ping_url</td>
                             <td th:text="${item.metric_value}">metric</td>
                             <td th:text="${item.error_message}">error_message</td>
                             <td th:text="${item.error_code}">error_code</td>
-                            <td th:text="${item.members}">members</td>
                             <td th:text="${item.add_time}">add_time</td>
                         </tr>
                         </tbody>
@@ -114,8 +110,52 @@
                 </div><!-- .panel-body -->
             </div><!-- .panel -->
         </div><!-- .row -->
+        <div class="row">
+            <table class="table table-bordered" th:if="${role_detail != null}">
+                <tr>
+                    <td>roleid</td>
+                    <td>role_name</td>
+                    <td>service</td>
+                    <td>type</td>
+                    <td>ping_url</td>
+                    <td>metric</td>
+                    <td>client_id</td>
+                    <td>members</td>
+                    <td>add_time</td>
+                    <td>send_time</td>
+                    <td>action</td>
+                </tr>
+                <tr>
+                    <td th:text="${role_detail.id}">a</td>
+                    <td th:text="${role_detail.role_name}">a</td>
+                    <td th:text="${role_detail.service}">a</td>
+                    <td th:text="${role_detail.type}">a</td>
+                    <td th:text="${role_detail.ping_url}">a</td>
+                    <td th:text="${role_detail.metric}">a</td>
+                    <td th:text="${role_detail.client_id}">a</td>
+                    <td th:text="${role_detail.members}">a</td>
+                    <td th:text="${role_detail.add_time}">a</td>
+                    <td th:text="${role_detail.send_time}">a</td>
+                    <td><span class="label label-danger remove-role" th:attr="data-url=|/role/delete?roleid=${role_detail.id}|">remove</span></td>
+                </tr>
+            </table>
+        </div><!-- .row -->
     </div><!-- .container -->
 </div><!-- .container-fluid -->
+
+<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>role 和对应的 logs 就会被删除&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</a>
+                <a href="#" id="remove-role-confirm" type="button" class="btn btn-sm btn-danger">confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="../vender/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
@@ -137,8 +177,8 @@
             role = role_list[0]['ID'];
             $("select").find("option[value='"+ role +"']").attr("selected",true);
         }else{
-            $("select").find("option[value='"+ role +"']").attr("selected",true);
-            $("select").find("option[value='"+ service +"']").attr("selected",true);
+            $("select.select-role").find("option[value='"+ role +"']").attr("selected",true);
+            $("select.select-service").find("option[value='"+ service +"']").attr("selected",true);
             $("#select-time").data("type", timeType);
         }
 
@@ -168,7 +208,11 @@
     });
 
 
-    $("#command-table").dataTable();
+    $("#command-table").dataTable({
+        "aaSorting": [
+            [ 0, "desc" ]
+        ]
+    } );
 
     window.metrics = /*[[${metrics}]]*/;
     var labels = [];
@@ -221,6 +265,15 @@
             }
         }
     };
+
+    $(".remove-role").click(function () {
+       var url = $(this).data("url");
+        $("#remove-role-confirm").attr("href", url);
+        $('#delete-modal').modal({
+            keyboard: false
+        });
+    });
+
 
     window.onload = function() {
         var ctx = document.getElementById("canvas").getContext("2d");

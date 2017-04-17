@@ -9,7 +9,7 @@ public class Roles {
     private String service;
     private String type;
     private String pingUrl;
-    private int metric;
+    private long metric;
     private String clientId;
     private String members;
     private int addTime;
@@ -54,7 +54,7 @@ public class Roles {
         this.pingUrl = pingUrl;
     }
 
-    public int getMetric() {
+    public long getMetric() {
         return metric;
     }
 
