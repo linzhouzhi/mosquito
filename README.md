@@ -54,3 +54,6 @@ if [ $1 -gt 3 ];then
     curl  -l -H "Content-type: application/json" -X POST -d  '{"metric":3,"metricValue":${1},"service":"service1","members":"@all","roleName":"serve-cpu2","clientId":"192.168.1.107"}'  http://localhost:8080/role/add_log
 fi
 ```
+
+企业号
+lzz36321.linzhouzhi36321@qq.com
