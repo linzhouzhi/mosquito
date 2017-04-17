@@ -4,7 +4,7 @@
 ## 一、介绍
     很多公司对错误的报警方式都是通过邮件提醒的，但是这种方式不及时也没有统计的功能，不利于我们分析错误的原因。而且通用性不强，
     mosquito 提供了两种方式，第一种是主动 ping service-url 来确认service是否挂掉，第二种是通过 restful 的接口由 service 主动推送消息。
-   
+
 ## 二、安装
 > 安装主要分为三个步骤，申请微信企业号、配置 mysql 数据库、运行 Application 就可以了。
 
@@ -41,7 +41,7 @@ curl  -l -H "Content-type: application/json" -X POST -d  '{"metric":3,"metricVal
 ```
 
 ### 3.4 微信报警结果
-<img src="./src/main/resources/public/images/wechat.jpeg" />
+<img src="./src/main/resources/public/images/wechat.jpeg" width="300px" />
 
 ## 四、例子
 ### 1 监控链接数
