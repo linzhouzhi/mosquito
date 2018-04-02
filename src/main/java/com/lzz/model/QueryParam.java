@@ -7,8 +7,7 @@ public class QueryParam {
     private String clientId;
     private int metric;
     private int metricValue;
-    private String roleName;
-    private String service;
+    private Integer roleId;
     private String members;
     private String errorMessage;
 
@@ -36,20 +35,12 @@ public class QueryParam {
         this.metricValue = metricValue;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public String getMembers() {
@@ -74,8 +65,6 @@ public class QueryParam {
                 "clientId='" + clientId + '\'' +
                 ", metric=" + metric +
                 ", metricValue=" + metricValue +
-                ", roleName='" + roleName + '\'' +
-                ", service='" + service + '\'' +
                 ", members='" + members + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
                 '}';

@@ -56,4 +56,10 @@ fi
 ```
 
 企业号
-lzz36321.linzhouzhi36321@qq.com
+m:lzz36321*
+y:linzhouzhi36321@qq.com
+
+
+      
+      子提供报警接口和统计，具体的监控脚本由客户端具体去部署（数据一致检测， price为空， rediscount, errorlog, ping）
+      该平台以后用于管理各种客户端（像 itemservice 的各种客户端都可以用这个平台来管理）

@@ -89,9 +89,6 @@ public class Sqlite {
                 "id int  PRIMARY KEY AUTO_INCREMENT, " +
                 "role_name VARCHAR(100), " +
                 "service VARCHAR(100), " +
-                "type VARCHAR(20), " +
-                "ping_url VARCHAR(255), " +
-                "metric  float(10,3), " +
                 "client_id VARCHAR(255), " +
                 "members VARCHAR(255), " +
                 "add_time int," +
@@ -101,9 +98,8 @@ public class Sqlite {
                 "id int PRIMARY KEY AUTO_INCREMENT, " +
                 "roleid int, " +
                 "service VARCHAR(100), " +
-                "type VARCHAR(20), " +
-                "ping_url VARCHAR(255), " +
                 "metric_value float(10,3), " +
+                "metric float(10,3), " +
                 "error_message VARCHAR(255), " +
                 "error_code int, " +
                 "members VARCHAR(255), " +

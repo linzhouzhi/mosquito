@@ -15,3 +15,7 @@ label.checkbox-inline{
 .members-tr{
     border-top:dashed #ccc 1px;
 }
+
+.pointer{
+    cursor: pointer;
+}
