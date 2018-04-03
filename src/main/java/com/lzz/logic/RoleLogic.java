@@ -121,7 +121,7 @@ public class RoleLogic implements Common{
      * 发送微信报警
      * @param roleId
      */
-    public void sendMessage(int roleId, float metric, float metricValue, String message, String members){
+    public void sendMessage(int roleId, double metric, double metricValue, String message, String members){
         if( metric < metricValue ){
             int sendTime = this.getRoleUpdateTime( roleId );
             int currentTime = CommonUtil.getTime();

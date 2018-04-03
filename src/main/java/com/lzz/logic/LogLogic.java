@@ -1,16 +1,14 @@
 package com.lzz.logic;
 
 import com.lzz.dao.LogDao;
-import com.lzz.dao.RoleDao;
 import com.lzz.model.LogModel;
-import com.lzz.model.QueryParam;
+import com.lzz.model.WarnParam;
 import com.lzz.util.ClientSign;
 import com.lzz.util.CommonUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lzz on 2018/4/2.
@@ -50,13 +48,11 @@ public class LogLogic {
     }
 
 
-    public boolean addLog(int roleId, QueryParam queryParam){
-        RoleDao roleDao = new RoleDao();
-        Map roleModel = roleDao.getRoleById( roleId );
+    public boolean addLog(int roleId, String service, String members, WarnParam queryParam){
         LogModel logs = new LogModel();
-        logs.setService((String) roleModel.get("service"));
+        logs.setService(service);
         logs.setRoleid( roleId );
-        logs.setMembers( queryParam.getMembers() );
+        logs.setMembers( members );
         logs.setClientId( ClientSign.clientIp() );
         logs.setErrorMessage( queryParam.getErrorMessage() );
         logs.setMetricValue( queryParam.getMetricValue() );

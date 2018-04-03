@@ -46,30 +46,28 @@
 <div style="width:10px;height:50px"></div>
 <div class="container-fluid">
     <div class="row" style="margin-bottom: 10px">
-        <div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <select class="form-control select-service">
-                        <option><a href="#"> select service ...</a></option>
-                        <option th:each="item : ${services}" th:attr="value=${item.service}" th:text="${item.service}">1</option>
-                    </select>
-                </div>
-            </div><!-- .form-group -->
-            <div class="form-group" style="padding-top:5px" id="select-time" data-type="minute">
-                <a class="select-time label label-primary" data-type="day">15 day</a>
-                <a class="select-time label label-success" data-type="hour">24 hour</a>
-                <a class="select-time label label-info" data-type="minute">30 minute</a>
-            </div><!-- .form-group -->
-        </div>
+        <div class="form-group">
+            <div style="width:300px;float:left;margin-left:28px;margin-right:10px;margin-top:15px">
+                <select class="form-control select-service">
+                    <option><a href="#"> select service ...</a></option>
+                    <option th:each="item : ${services}" th:attr="value=${item.service}" th:text="${item.service}">1</option>
+                </select>
+            </div>
+        </div><!-- .form-group -->
+        <div class="form-group" style="padding-top:5px" id="select-time" data-type="minute">
+            <a class="select-time label label-primary" data-type="day">15 day</a>
+            <a class="select-time label label-success" data-type="hour">24 hour</a>
+            <a class="select-time label label-info" data-type="minute">30 minute</a>
+        </div><!-- .form-group -->
     </div><!-- .row -->
-    <div class="row">
+    <div class="container-fluid">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row" id="chart-content"></div>
             </div><!-- .panel-body -->
         </div><!-- .panel -->
     </div><!-- .row -->
-    <div class="row">
+    <div class="container-fluid">
         <div class="panel panel-default">
             <div class="panel-body">
                 <table class="table table-bordered" id="command-table">

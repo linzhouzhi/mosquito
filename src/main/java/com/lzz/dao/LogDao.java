@@ -19,7 +19,7 @@ public class LogDao implements Common{
     public static boolean insertLogs(LogModel logs){
         int roleId = logs.getRoleid();
         String service = logs.getService();
-        float metric_value = logs.getMetricValue();
+        double metric_value = logs.getMetricValue();
         String errorMessage = logs.getErrorMessage();
         int errorCode = logs.getErrorCode();
         String members = logs.getMembers();

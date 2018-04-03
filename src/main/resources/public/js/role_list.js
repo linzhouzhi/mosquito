@@ -70,8 +70,11 @@ $("input[name='service']").blur(function (e) {
 
 //************** 选择所有成员
 $("input[name='all_members']").click(function () {
-    var checkboxs = $(this).parent(".checkbox-inline").prevAll().trigger("click");
-    console.log(checkboxs);
+    if( $(this).attr("checked") == true ){
+        $(this).parent(".checkbox-inline").prevAll().attr("checked", false);
+    }else{
+        $(this).parent(".checkbox-inline").prevAll().attr("checked", true);
+    }
 });
 
 // ************* 表单检查

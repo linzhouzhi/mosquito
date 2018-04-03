@@ -3,13 +3,13 @@ package com.lzz.model;
 /**
  * Created by lzz on 17/4/16.
  */
-public class QueryParam {
+public class WarnParam {
     private String clientId;
-    private int metric;
-    private int metricValue;
+    private double metric;
+    private double metricValue;
     private Integer roleId;
-    private String members;
     private String errorMessage;
+    private Integer errorCode;
 
     public String getClientId() {
         return clientId;
@@ -19,19 +19,19 @@ public class QueryParam {
         this.clientId = clientId;
     }
 
-    public int getMetric() {
+    public double getMetric() {
         return metric;
     }
 
-    public void setMetric(int metric) {
+    public void setMetric(double metric) {
         this.metric = metric;
     }
 
-    public int getMetricValue() {
+    public double getMetricValue() {
         return metricValue;
     }
 
-    public void setMetricValue(int metricValue) {
+    public void setMetricValue(double metricValue) {
         this.metricValue = metricValue;
     }
 
@@ -43,14 +43,6 @@ public class QueryParam {
         this.roleId = roleId;
     }
 
-    public String getMembers() {
-        return members;
-    }
-
-    public void setMembers(String members) {
-        this.members = members;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -59,14 +51,23 @@ public class QueryParam {
         this.errorMessage = errorMessage;
     }
 
+    public Integer getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
+    }
+
     @Override
     public String toString() {
-        return "QueryParam{" +
+        return "WarnParam{" +
                 "clientId='" + clientId + '\'' +
                 ", metric=" + metric +
                 ", metricValue=" + metricValue +
-                ", members='" + members + '\'' +
+                ", roleId=" + roleId +
                 ", errorMessage='" + errorMessage + '\'' +
+                ", errorCode=" + errorCode +
                 '}';
     }
 }

@@ -6,8 +6,8 @@ package com.lzz.model;
 public class LogModel {
     private int roleid;
     private String service;
-    private float metricValue;
-    private float metric;
+    private double metricValue;
+    private double metric;
     private String errorMessage;
     private int errorCode;
     private String members;
@@ -31,14 +31,6 @@ public class LogModel {
 
     public void setService(String service) {
         this.service = service;
-    }
-
-    public float getMetricValue() {
-        return metricValue;
-    }
-
-    public void setMetricValue(float metricValue) {
-        this.metricValue = metricValue;
     }
 
     public String getErrorMessage() {
@@ -105,11 +97,19 @@ public class LogModel {
         this.minute = minute;
     }
 
-    public float getMetric() {
+    public double getMetricValue() {
+        return metricValue;
+    }
+
+    public void setMetricValue(double metricValue) {
+        this.metricValue = metricValue;
+    }
+
+    public double getMetric() {
         return metric;
     }
 
-    public void setMetric(float metric) {
+    public void setMetric(double metric) {
         this.metric = metric;
     }
 
