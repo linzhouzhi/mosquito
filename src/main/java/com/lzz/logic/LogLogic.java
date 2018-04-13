@@ -6,9 +6,12 @@ import com.lzz.model.WarnParam;
 import com.lzz.util.ClientSign;
 import com.lzz.util.CommonUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lzz on 2018/4/2.
@@ -23,25 +26,25 @@ public class LogLogic {
     }
 
 
-    public List getMetricGroup(String target, String timeType,int roleid){
+    public List getMetricGroup(String target, String timeType,String role){
         List list = null;
-        int dateTime = getTypeTime( timeType );
-        list = logDao.selectByServiceGroupLogs(target, timeType, dateTime,roleid);
+        long dateTime = getTypeTime( timeType );
+        list = logDao.selectByServiceGroupLogs(target, timeType, dateTime,role);
         return list;
     }
 
 
-    public int getTypeTime( String type ){
-        int time = CommonUtil.getTime();
+    public long getTypeTime( String type ){
+        long time = CommonUtil.getTime();
         switch (type){
             case "minute":
-                time = time - 30*60;
+                time = time - 30*60*1000;
                 break;
             case "hour":
-                time = time - 24*60*60;
+                time = time - 24*60*60*1000;
                 break;
             case "day":
-                time = time - 30*24*60*60;
+                time = time - 30*24*60*60*1000;
                 break;
         }
         return time;
@@ -52,6 +55,8 @@ public class LogLogic {
         LogModel logs = new LogModel();
         logs.setService(service);
         logs.setRoleid( roleId );
+        logs.setRoleName( queryParam.getRoleName() );
+        logs.setMetric( queryParam.getMetric() );
         logs.setMembers( members );
         logs.setClientId( ClientSign.clientIp() );
         logs.setErrorMessage( queryParam.getErrorMessage() );
@@ -67,12 +72,22 @@ public class LogLogic {
 
     public List getLogs(String target, String timeType, String type) {
         List list = null;
-        int dateTime = getTypeTime( timeType );
+        long dateTime = getTypeTime( timeType );
         if( type.equals("role") ){
             list = logDao.selectLogsByRoleid(target, dateTime);
         }else {
             list = logDao.selectLogsByService(target, dateTime);
         }
         return list;
+    }
+
+    public Set getRoles(List logs) {
+        Set roles = new HashSet();
+        for(int i = 0; i < logs.size(); i++){
+            LinkedCaseInsensitiveMap tmp = (LinkedCaseInsensitiveMap) logs.get(i);
+            String roleName = (String) tmp.get("role_name");
+            roles.add( roleName );
+        }
+        return roles;
     }
 }

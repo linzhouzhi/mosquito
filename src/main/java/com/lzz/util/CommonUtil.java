@@ -31,9 +31,8 @@ public class CommonUtil {
      * 获取当前时间戳
      * @return
      */
-    public static int getTime(){
-        String timestamp = String.valueOf( (new Date().getTime())/1000);
-        return Integer.valueOf(timestamp);
+    public static long getTime(){
+        return new Date().getTime();
     }
 
 }

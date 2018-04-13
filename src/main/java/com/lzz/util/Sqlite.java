@@ -91,12 +91,13 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "client_id VARCHAR(255), " +
                 "members VARCHAR(255), " +
-                "add_time int," +
-                "send_time int)");
+                "add_time bigint," +
+                "send_time bigint)");
         // 创建 logs 表
         jdbcTpl.execute("create table if not exists logs(" +
                 "id int PRIMARY KEY AUTO_INCREMENT, " +
                 "roleid int, " +
+                "role_name VARCHAR(100), " +
                 "service VARCHAR(100), " +
                 "metric_value float(10,3), " +
                 "metric float(10,3), " +
@@ -104,7 +105,7 @@ public class Sqlite {
                 "error_code int, " +
                 "members VARCHAR(255), " +
                 "client_id VARCHAR(255), " +
-                "add_time int," +
+                "add_time bigint," +
                 "day int," +
                 "hour int," +
                 "minute int" +

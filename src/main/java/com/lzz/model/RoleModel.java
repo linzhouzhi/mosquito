@@ -9,7 +9,8 @@ public class RoleModel {
     private String service;
     private String clientId;
     private String members;
-    private int addTime;
+    private long addTime;
+    private long send_time;
 
     public int getId() {
         return id;
@@ -51,11 +52,19 @@ public class RoleModel {
         this.members = members;
     }
 
-    public int getAddTime() {
+    public long getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(int addTime) {
+    public void setAddTime(long addTime) {
         this.addTime = addTime;
+    }
+
+    public long getSend_time() {
+        return send_time;
+    }
+
+    public void setSend_time(long send_time) {
+        this.send_time = send_time;
     }
 }

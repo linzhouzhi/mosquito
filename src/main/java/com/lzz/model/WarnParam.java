@@ -8,6 +8,7 @@ public class WarnParam {
     private double metric;
     private double metricValue;
     private Integer roleId;
+    private String roleName;
     private String errorMessage;
     private Integer errorCode;
 
@@ -41,6 +42,14 @@ public class WarnParam {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public String getErrorMessage() {

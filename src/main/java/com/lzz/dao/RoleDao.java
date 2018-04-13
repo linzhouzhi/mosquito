@@ -30,10 +30,11 @@ public class RoleDao implements Common{
         String service = roles.getService();
         String clientIp = roles.getClientId();
         String members = roles.getMembers();
-        int add_time = (int) new Date().getTime();
-        int send_time = 0;
+        long add_time = new Date().getTime();
+        long send_time = 0;
         String sql = "insert into roles(role_name, service, client_id, members, add_time, send_time) " +
                 "VALUES ('"+ role_name+"','"+ service+"','"+clientIp+"','"+members+"'," + add_time + "," + send_time + ")";
+        System.out.println( sql +"----");
         int res = Sqlite.getSqlite().insert(sql);
         return res;
     }

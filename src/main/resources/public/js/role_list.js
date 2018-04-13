@@ -8,12 +8,12 @@ $(document).ready(function () {
         var tstr = "";
         for(var i = 0; i < res.length; i++){
             tstr += "<tr>";
-            tstr += "<td>" + res[i].id + "</td>";
+            tstr += "<td class='restful-detail' data-id='" + res[i].id + "'>" + res[i].id + "</td>";
             tstr += "<td>" + res[i].role_name + "</td>";
             tstr += "<td>" + res[i].service + "</td>";
             tstr += "<td>" + res[i].members + "</td>";
-            tstr += "<td>" + res[i].add_time + "</td>";
-            tstr += "<td>" + res[i].send_time + "</td>";
+            tstr += "<td>" + timestampToTime(res[i].add_time) + "</td>";
+            tstr += "<td>" + timestampToTime(res[i].send_time) + "</td>";
             tstr += "<td><span class='label label-danger remove-role pointer' data-url='/role/delete?roleid=" + res[i].id + "'>remove</span></td>";
             tstr += "</tr>";
         }
@@ -23,6 +23,10 @@ $(document).ready(function () {
     init_form();
 });
 
+$(document).on("click", ".restful-detail", function () {
+    $("#role-id").text( $(this).data("id") );
+    $("#restful-modal").modal("show");
+});
 
 $(document).on("click",".remove-role",function () {
     var url = $(this).data("url");
@@ -69,11 +73,16 @@ $("input[name='service']").blur(function (e) {
 });
 
 //************** 选择所有成员
-$("input[name='all_members']").click(function () {
-    if( $(this).attr("checked") == true ){
-        $(this).parent(".checkbox-inline").prevAll().attr("checked", false);
+$(document).on("click", "input[name='all_members']", function () {
+    var target = $(this).data("target");
+    if( $(this).is(':checked') ){
+        $("[data-target='" + target + "']").each(function(){
+            $(this).prop("checked",true);
+        });
     }else{
-        $(this).parent(".checkbox-inline").prevAll().attr("checked", true);
+        $("[data-target='" + target + "']").each(function(){
+            $(this).removeAttr("checked",false);
+        });
     }
 });
 

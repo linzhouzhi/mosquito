@@ -4,7 +4,10 @@
     <link href="../vender/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet" charset="utf-8" />
     <link href="../css/common.css" rel="stylesheet" charset="utf-8" />
     <style>
-
+        .restful-detail{
+            color: #0088CC;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -26,7 +29,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/role"> role <span class="sr-only">(current)</span></a></li>
-                <li><a href="/log_statistic">log statistic</a></li>
+                <li><a href="/log_statistic"> log </a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -89,11 +92,11 @@
                         <tr th:each="item : ${userLsit}" class="members-tr">
                             <td th:text="${item.key}" valign="top"></td>
                             <td>
-                                <label class="checkbox-inline" th:each="user : ${item.value}">
-                                    <input type="checkbox" name="members" th:attr="value=${user.userid}" th:text="${user.userid}"></input>
+                                <label class="checkbox-inline checkbox-members" th:each="user : ${item.value}">
+                                    <input type="checkbox" name="members" th:attr="value=${user.userid},data-target=${item.key}" th:text="${user.userid}"></input>
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="all_members" value="">@all</input>
+                                    <input type="checkbox" name="all_members" th:attr="data-target=${item.key}" value="">@all</input>
                                 </label>
                             </td>
                         </tr>
@@ -119,6 +122,27 @@
             <div class="modal-footer">
                 <a type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</a>
                 <a href="#" id="remove-role-confirm" type="button" class="btn btn-sm btn-danger">confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="restful-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5>restful: http://{ip:port}/mosquito</h5>
+                <pre style="overflow: hidden">
+request body:
+{
+  "clientId": "127.0.0.1",
+  "metric": 1000,
+  "metricValue":"100302",
+  "roleId":<span id="role-id"></span>,
+  "roleName":"hi3",
+  "errorMessage":"hello error"
+}
+                </pre>
             </div>
         </div>
     </div>

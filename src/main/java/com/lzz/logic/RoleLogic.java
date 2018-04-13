@@ -60,12 +60,12 @@ public class RoleLogic implements Common{
      * @param roleId
      * @return
      */
-    public int getRoleUpdateTime(int roleId){
+    public long getRoleUpdateTime(int roleId){
         Map map = roleDao.selectRoleById( roleId );
         if( map.isEmpty() || map == null ){
             return 0;
         }
-        return (int) map.get("send_time");
+        return (long) map.get("send_time");
     }
 
     /**
@@ -123,8 +123,8 @@ public class RoleLogic implements Common{
      */
     public void sendMessage(int roleId, double metric, double metricValue, String message, String members){
         if( metric < metricValue ){
-            int sendTime = this.getRoleUpdateTime( roleId );
-            int currentTime = CommonUtil.getTime();
+            long sendTime = this.getRoleUpdateTime( roleId );
+            long currentTime = CommonUtil.getTime();
             // 如果发送时间过了 SEND_RANGE_TIME ，那么就发送报警
             if( (currentTime - sendTime) > SEND_RANGE_TIME ){
                 // 微信发送报警

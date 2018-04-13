@@ -5,6 +5,7 @@ package com.lzz.model;
  */
 public class LogModel {
     private int roleid;
+    private String roleName;
     private String service;
     private double metricValue;
     private double metric;
@@ -12,7 +13,7 @@ public class LogModel {
     private int errorCode;
     private String members;
     private String clientId;
-    private int addTime;
+    private long addTime;
     private int day;
     private int hour;
     private int minute;
@@ -23,6 +24,14 @@ public class LogModel {
 
     public void setRoleid(int roleid) {
         this.roleid = roleid;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public String getService() {
@@ -65,11 +74,11 @@ public class LogModel {
         this.clientId = clientId;
     }
 
-    public int getAddTime() {
+    public long getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(int addTime) {
+    public void setAddTime(long addTime) {
         this.addTime = addTime;
     }
 

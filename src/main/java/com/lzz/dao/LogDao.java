@@ -18,7 +18,9 @@ public class LogDao implements Common{
     }
     public static boolean insertLogs(LogModel logs){
         int roleId = logs.getRoleid();
+        String roleName = logs.getRoleName();
         String service = logs.getService();
+        double metric = logs.getMetric();
         double metric_value = logs.getMetricValue();
         String errorMessage = logs.getErrorMessage();
         int errorCode = logs.getErrorCode();
@@ -26,8 +28,9 @@ public class LogDao implements Common{
         String client_id = logs.getClientId();
         long add_time = logs.getAddTime();
 
-        String sql = "insert into logs(roleid, service, metric_value, error_message, error_code, members, client_id, add_time, day, hour, minute) " +
-                "VALUES ("+ roleId+",'"+ service+"'," +
+        String sql = "insert into logs(roleid, role_name, service, metric,metric_value, error_message, error_code, members, client_id, add_time, day, hour, minute) " +
+                "VALUES ("+ roleId+",'"+ roleName +"','"+ service+"'," +
+                +metric+"," +
                 +metric_value+"," +
                 "'"+errorMessage+"',"+errorCode+"," +
                 "'"+members+"'," + "'" + client_id+ "'," + add_time + "," +
@@ -74,14 +77,14 @@ public class LogDao implements Common{
         return list;
     }
 
-    public List selectByServiceGroupLogs(String service, String timeType, int dateTime, int roleid){
+    public List selectByServiceGroupLogs(String service, String timeType, long dateTime, String role){
         String sql = "";
         if( timeType.equals("minute") ){
-            sql = "select concat(hour,':',minute) as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and roleid=" + roleid + " group by hour," + timeType;
+            sql = "select concat(hour,':',minute) as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "' group by hour," + timeType;
         }else if( timeType.equals("hour") ){
-            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and roleid=" + roleid + "  group by day," + timeType;
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "'  group by day," + timeType;
         }else{
-            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and roleid=" + roleid + "  group by " + timeType;
+            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "'  group by " + timeType;
         }
         System.out.println(sql);
         List list = Sqlite.getSqlite().select(sql);
@@ -89,13 +92,13 @@ public class LogDao implements Common{
         return list;
     }
 
-    public List selectLogsByRoleid(String roleId, int dateTime){
+    public List selectLogsByRoleid(String roleId, long dateTime){
         String sql = "select * from logs where add_time > " + dateTime+ " and roleid='" + roleId + "' order by add_time desc limit " + LIMIT;
         List list = Sqlite.getSqlite().select( sql );
         return list;
     }
 
-    public List selectLogsByService(String service, int dateTime){
+    public List selectLogsByService(String service, long dateTime){
         String sql = "select * from logs where add_time > " + dateTime+ " and service='" + service + "' order by add_time desc limit " + LIMIT;
         List list = Sqlite.getSqlite().select( sql );
         return list;
