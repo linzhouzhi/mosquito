@@ -5,6 +5,7 @@ import com.lzz.logic.LogLogic;
 import com.lzz.logic.RoleLogic;
 import com.lzz.model.Response;
 import com.lzz.model.WarnParam;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,9 @@ public class LogController {
             Map roleModel = roleDao.getRoleById( roleId );
             String service = (String) roleModel.get("service");
             String members = (String) roleModel.get("members");
+            if( StringUtils.isBlank( queryParam.getRoleName()  ) ){
+                queryParam.setRoleName( (String)roleModel.get("role_name") );
+            }
 
             logLogic.addLog( roleId, service, members, queryParam);
             double metric = queryParam.getMetric();

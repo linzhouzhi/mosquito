@@ -10,7 +10,7 @@ $(document).ready(function () {
             tstr += "<tr>";
             tstr += "<td class='restful-detail' data-id='" + res[i].id + "'>" + res[i].id + "</td>";
             tstr += "<td>" + res[i].role_name + "</td>";
-            tstr += "<td>" + res[i].service + "</td>";
+            tstr += "<td><a  target='_blank' href='/log_statistic?service=" + res[i].service + "'>" + res[i].service + "</a></td>";
             tstr += "<td>" + res[i].members + "</td>";
             tstr += "<td>" + timestampToTime(res[i].add_time) + "</td>";
             tstr += "<td>" + timestampToTime(res[i].send_time) + "</td>";

@@ -84,7 +84,7 @@ public class LogDao implements Common{
         }else if( timeType.equals("hour") ){
             sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "'  group by day," + timeType;
         }else{
-            sql = "select " + timeType + " as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "'  group by " + timeType;
+            sql = "select day as date,count(*) as c from logs where add_time > " + dateTime+ " and service='" + service + "' and role_name='" + role + "'  group by day";
         }
         System.out.println(sql);
         List list = Sqlite.getSqlite().select(sql);
@@ -101,6 +101,7 @@ public class LogDao implements Common{
     public List selectLogsByService(String service, long dateTime){
         String sql = "select * from logs where add_time > " + dateTime+ " and service='" + service + "' order by add_time desc limit " + LIMIT;
         List list = Sqlite.getSqlite().select( sql );
+        System.out.println( sql );
         return list;
     }
 }
