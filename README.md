@@ -22,7 +22,7 @@
 ### 3.2 查看接口格式
 > 直接点击 roleid 可以查看接口格式
 
-<img src="./src/main/resources/public/images/role_format.png" width="850px" />
+<img src="./src/main/resources/public/images/role-format.png" width="850px" />
 
 ### 3.3 log 查看
 > 通过图表展示报警情况
