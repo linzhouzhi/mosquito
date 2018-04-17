@@ -34,7 +34,6 @@ public class RoleDao implements Common{
         long send_time = 0;
         String sql = "insert into roles(role_name, service, client_id, members, add_time, send_time) " +
                 "VALUES ('"+ role_name+"','"+ service+"','"+clientIp+"','"+members+"'," + add_time + "," + send_time + ")";
-        System.out.println( sql +"----");
         int res = Sqlite.getSqlite().insert(sql);
         return res;
     }

@@ -36,7 +36,6 @@ public class LogLogic {
 
     public long getTypeTime( String type ){
         long time = CommonUtil.getTime();
-        System.out.println( time );
         switch (type){
             case "minute":
                 time = time - 30*60*1000;
@@ -48,7 +47,6 @@ public class LogLogic {
                 time = time - 15*24*60*60*1000;
                 break;
         }
-        System.out.println( time );
         return time;
     }
 
