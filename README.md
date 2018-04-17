@@ -28,6 +28,7 @@
 > 通过图表展示报警情况
 <img src="./src/main/resources/public/images/log.png" width="850px" />
 
+### 3.4 例子
 ```
 metric:是报警阀值
 metricValue: 是具体监控值，当这个值超过 metric 就会微信报警
@@ -47,15 +48,10 @@ http://localhost:8082/mosquito
 }
 ```
 
-### 3.4 微信报警结果
+### 3.5 微信报警结果
 <img src="./src/main/resources/public/images/wechat.jpeg" width="300px" />
 
 
 企业号
 m:lzz36321*
 y:linzhouzhi36321@qq.com
-
-
-      
-      子提供报警接口和统计，具体的监控脚本由客户端具体去部署（数据一致检测， price为空， rediscount, errorlog, ping）
-      该平台以后用于管理各种客户端（像 itemservice 的各种客户端都可以用这个平台来管理）
