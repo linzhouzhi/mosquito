@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 public class Wechat {
     private static Logger logger = LoggerFactory.getLogger(Wechat.class);
     private static final int RETRY_TIME = 2; //重试次数
-    private static final String corpid = "wx18a1a4265b89b855";
-    private static final String corpsecret="pkvE5KLJ1zfghu4P9pVZBw4GHpD6p5iDopVRor_ZnRGAhBTwYIoiKDpT8CDgb_Qz";
+    private static final String corpid = PropertiesUtil.get("wechat.corpid");
+    private static final String corpsecret=PropertiesUtil.get("wechat.corpsecret");
     private static final int agentid = 1;
     private static String accessToken;
 

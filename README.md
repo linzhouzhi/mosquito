@@ -7,9 +7,9 @@
 ## 二、安装
 > 安装主要分为三个步骤，申请微信企业号、配置 mysql 数据库、运行 Application 就可以了。
 
-* 1 申请微信企业号获取 corpid corpsecret
-* 2 创建 mysql mosquito 数据库
-* 3 运行 Application
+* 1 申请微信企业号获取 corpid corpsecret,配置到 application.properties 文件中
+* 2 创建 mysql mosquito 数据库，在 applicationContext.xml 修改配置数据库配置
+* 3 运行 Application，查看 http://localhost:8082/role
 
 ## 三、使用
 > mosquito 有两个界面一个 role 界面用于添加报警规则，第二个界面是 log 用于统计报警的次数以及微信接口发送的状况，具体使用步骤如下
