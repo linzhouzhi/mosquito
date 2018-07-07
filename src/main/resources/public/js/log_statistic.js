@@ -87,7 +87,7 @@ function create_chart(metrics, id){
 
     var chart_div = '<div class="col-sm-4">' +
         '<div class="chart-header">' + id + '</div>' +
-        '<canvas id="canvas' + id+ '" style="max-height: 200px"></canvas>'+
+        '<canvas id="canvas' + id+ '" style="min-height: 200px"></canvas>'+
         '</div>';
 
     $("#chart-content").append( chart_div );

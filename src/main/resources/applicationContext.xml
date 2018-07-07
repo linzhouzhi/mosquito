@@ -9,10 +9,10 @@
                   value="com.mysql.jdbc.Driver">
         </property>
         <property name="url"
-                  value="jdbc:mysql://localhost:3306/mosquito">
+                  value="jdbc:mysql://10.16.46.170:3306/mosquito">
         </property>
-        <property name="username" value="root"></property>
-        <property name="password" value="root"></property>
+        <property name="username" value="test"></property>
+        <property name="password" value="test"></property>
     </bean>
 
     <bean id="jdbcTemplate"

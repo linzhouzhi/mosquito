@@ -59,8 +59,10 @@ public class Wechat {
      * @return
      */
     private static boolean messageSend( JSONObject jsonObject ){
+        System.out.println( getAccessToken() );
         String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + getAccessToken();
-        JSONObject res = HttpClient.httpPost( url, jsonObject, false);
+        JSONObject res = HttpClient.httpPost( url, jsonObject);
+        System.out.println( res );
         boolean responStatus = checkResponse(res);
         return responStatus;
     }

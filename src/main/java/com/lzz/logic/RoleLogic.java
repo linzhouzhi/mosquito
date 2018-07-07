@@ -125,6 +125,7 @@ public class RoleLogic implements Common{
         if( metric < metricValue ){
             long sendTime = this.getRoleUpdateTime( roleId );
             long currentTime = CommonUtil.getTime();
+            System.out.println( sendTime + " send ----------------- current " + currentTime);
             // 如果发送时间过了 SEND_RANGE_TIME ，那么就发送报警
             if( (currentTime - sendTime) > SEND_RANGE_TIME ){
                 // 微信发送报警

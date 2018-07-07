@@ -101,7 +101,7 @@ public class Sqlite {
                 "service VARCHAR(100), " +
                 "metric_value float(10,3), " +
                 "metric float(10,3), " +
-                "error_message VARCHAR(255), " +
+                "error_message VARCHAR(655), " +
                 "error_code int, " +
                 "members VARCHAR(255), " +
                 "client_id VARCHAR(255), " +

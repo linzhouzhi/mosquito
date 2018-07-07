@@ -96,17 +96,6 @@ public class RoleDao implements Common{
         return list;
     }
 
-    /**
-     *  获取 ping 类型的 roles
-     * @return
-     */
-    public List getPingRoles(){
-        String sql = "select * from roles where type='ping'";
-        List list = Sqlite.getSqlite().select(sql);
-        System.out.println(list);
-        return list;
-    }
-
     public Map getRoleById( Integer roleId ){
         String sql = "select * from roles where id=" + roleId;
         Map map = Sqlite.getSqlite().selectRow( sql );

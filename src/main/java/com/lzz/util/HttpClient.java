@@ -3,6 +3,9 @@ package com.lzz.util;
 /**
  * Created by gl49 on 2018/7/7.
  */
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -23,6 +26,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class HttpClient {
+    private static String proxyHost = PropertiesUtil.get("http.proxy");
 
     private static final class DefaultTrustManager implements X509TrustManager {
         @Override
@@ -52,9 +56,20 @@ public class HttpClient {
         SSLSocketFactory ssf = ctx.getSocketFactory();
 
         URL url = new URL(uri);
-        InetSocketAddress addr = new InetSocketAddress("10.16.46.161",3333);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-        HttpsURLConnection httpsConn = (HttpsURLConnection) url.openConnection( proxy );
+        HttpsURLConnection httpsConn;
+        String hostStr = proxyHost;
+        String proxyIp;
+        Integer proxyPort;
+        if(StringUtils.isBlank( hostStr )){
+            httpsConn = (HttpsURLConnection) url.openConnection();
+        }else{
+            String[] tmpArr = hostStr.split(":");
+            proxyIp = tmpArr[0];
+            proxyPort = Integer.valueOf(tmpArr[1]);
+            InetSocketAddress addr = new InetSocketAddress(proxyIp, proxyPort);
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+            httpsConn = (HttpsURLConnection) url.openConnection( proxy );
+        }
         httpsConn.setConnectTimeout(50000);
         httpsConn.setReadTimeout(50000);
         httpsConn.setSSLSocketFactory(ssf);
@@ -117,14 +132,28 @@ public class HttpClient {
         return getBytesFromStream(httpsConn.getInputStream());
     }
 
-    public static byte[] doGet(String uri) throws IOException {
-        HttpURLConnection httpConn = getHttpURLConnection(uri, "GET");
-        return getBytesFromStream(httpConn.getInputStream());
+    public static JSONObject httpPost(String url, JSONObject jsonParam){
+        String param = jsonParam.toString();
+        byte[] res = new byte[0];
+        try {
+            res = doPosts(url, param);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String resStr = new String( res );
+        JSONObject jsonObject = JSONObject.fromObject( resStr );
+        return jsonObject;
     }
 
-    public static byte[] doPost(String uri, String data) throws IOException {
-        HttpsURLConnection httpsConn = getHttpsURLConnection(uri, "POST");
-        setBytesToStream(httpsConn.getOutputStream(), data.getBytes());
-        return getBytesFromStream(httpsConn.getInputStream());
+    public static JSONObject httpGet(String url){
+        byte[] res = new byte[0];
+        try {
+            res = doGets(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String resStr = new String( res );
+        JSONObject jsonObject = JSONObject.fromObject( resStr );
+        return jsonObject;
     }
 }

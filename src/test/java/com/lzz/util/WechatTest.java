@@ -3,6 +3,8 @@ package com.lzz.util;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Created by lzz on 17/4/9.
  */
@@ -26,5 +28,12 @@ public class WechatTest {
     public void allUserListTest(){
         JSONObject res = Wechat.allUserList();
         System.out.println(res);
+    }
+
+    @Test
+    public void testGet() throws IOException {
+        String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wx18a1a4265b89b855&corpsecret=rIBc9ZnLRa40MRsnA6_WHLNgey7wIoUqp_Vq4lmwTrM";
+        JSONObject res = HttpClient.httpGet( url );
+        System.out.println( res );
     }
 }
