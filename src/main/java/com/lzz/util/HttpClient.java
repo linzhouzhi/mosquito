@@ -1,140 +1,130 @@
 package com.lzz.util;
 
-import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.URLDecoder;
-
 /**
- * Created by lzz on 17/4/9.
+ * Created by gl49 on 2018/7/7.
  */
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 public class HttpClient {
-    private static Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
-    /**
-     * httpPost
-     * @param url  路径
-     * @param jsonParam 参数
-     * @return
-     */
-    public static JSONObject httpPost(String url,JSONObject jsonParam){
-        return httpPost(url, jsonParam, false);
+    private static final class DefaultTrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
     }
 
-    /**
-     * post请求
-     * @param url         url地址
-     * @param jsonParam     参数
-     * @param noNeedResponse    不需要返回结果
-     * @return
-     */
-    public static JSONObject httpPost(String url,JSONObject jsonParam, boolean noNeedResponse){
-        //post请求返回结果
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        JSONObject jsonResult = null;
-        HttpPost method = new HttpPost(url);
+    private static HttpsURLConnection getHttpsURLConnection(String uri, String method) throws IOException {
+        SSLContext ctx = null;
         try {
-            if (null != jsonParam) {
-                //解决中文乱码问题
-                StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
-                entity.setContentEncoding("UTF-8");
-                entity.setContentType("application/json");
-                method.setEntity(entity);
-            }
-            HttpResponse result = httpClient.execute(method);
-            url = URLDecoder.decode(url, "UTF-8");
-            /**请求发送成功，并得到响应**/
-            if (result.getStatusLine().getStatusCode() == 200) {
-                String str = "";
-                try {
-                    /**读取服务器返回过来的json字符串数据**/
-                    str = EntityUtils.toString(result.getEntity());
-                    if (noNeedResponse) {
-                        return null;
-                    }
-                    /**把json字符串转换成json对象**/
-                    jsonResult = JSONObject.fromObject(str);
-                } catch (Exception e) {
-                    logger.error("post请求提交失败:" + url, e);
-                }
-            }
-        } catch (IOException e) {
-            logger.error("post请求提交失败:" + url, e);
+            ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[] { new DefaultTrustManager() }, new SecureRandom());
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return jsonResult;
+        SSLSocketFactory ssf = ctx.getSocketFactory();
+
+        URL url = new URL(uri);
+        InetSocketAddress addr = new InetSocketAddress("10.16.46.161",3333);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+        HttpsURLConnection httpsConn = (HttpsURLConnection) url.openConnection( proxy );
+        httpsConn.setConnectTimeout(50000);
+        httpsConn.setReadTimeout(50000);
+        httpsConn.setSSLSocketFactory(ssf);
+        httpsConn.setHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String arg0, SSLSession arg1) {
+                return true;
+            }
+        });
+        httpsConn.setRequestMethod(method);
+        httpsConn.setDoInput(true);
+        httpsConn.setDoOutput(true);
+        return httpsConn;
     }
 
-
-    /**
-     * 发送get请求
-     * @param url    路径
-     * @return
-     */
-    public static JSONObject httpGet(String url){
-        //get请求返回结果
-        JSONObject jsonResult = null;
-        try {
-            DefaultHttpClient client = new DefaultHttpClient();
-            //发送get请求
-            HttpGet request = new HttpGet(url);
-            HttpResponse response = client.execute(request);
-
-            /**请求发送成功，并得到响应**/
-            int httpStatus = response.getStatusLine().getStatusCode();
-            if (httpStatus == HttpStatus.SC_OK) {
-                /**读取服务器返回过来的json字符串数据**/
-                String strResult = EntityUtils.toString(response.getEntity());
-                /**把json字符串转换成json对象**/
-                jsonResult = JSONObject.fromObject(strResult);
-                url = URLDecoder.decode(url, "UTF-8");
-            } else {
-                logger.error("get请求提交失败:" + url);
-            }
-        } catch (Exception e) {
-            logger.error("get请求提交失败:" + url, e);
-        }
-        return jsonResult;
+    private static HttpURLConnection getHttpURLConnection(String uri, String method) throws IOException {
+        URL url = new URL(uri);
+        InetSocketAddress addr = new InetSocketAddress("10.16.46.161",3333);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection( proxy );
+        httpConn.setRequestMethod(method);
+        httpConn.setDoInput(true);
+        httpConn.setDoOutput(true);
+        return httpConn;
     }
 
-    public static JSONObject urlPing( String url ){
-        //get请求返回结果
-        JSONObject jsonResult = new JSONObject();
-        jsonResult.put("errorCode", 0);
-        try {
-            DefaultHttpClient client = new DefaultHttpClient();
-            //发送get请求
-            HttpGet request = new HttpGet(url);
-            HttpResponse response = client.execute(request);
-
-            /**请求发送成功，并得到响应**/
-            int httpStatus = response.getStatusLine().getStatusCode();
-            if (httpStatus != HttpStatus.SC_OK) {
-                JSONObject message = new JSONObject();
-                message.put("errorCode", httpStatus);
-                message.put("errorMessage", "get 请求失败错误代码：" + httpStatus );
-                logger.error("get请求提交失败:" + url);
-                return message;
-            }
-        } catch (Exception e) {
-            JSONObject message = new JSONObject();
-            message.put("errorCode", 1);
-            String mesg = e.getMessage();
-            if(mesg.length() > 240 ){
-                mesg = mesg.substring(0, 240);
-            }
-            message.put("errorMessage", "get 请求失败错误信息：" +  mesg);
-            logger.error("get请求提交失败:" + url, e);
-            return message;
+    private static byte[] getBytesFromStream(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] kb = new byte[1024];
+        int len;
+        while ((len = is.read(kb)) != -1) {
+            baos.write(kb, 0, len);
         }
-        return jsonResult;
+        byte[] bytes = baos.toByteArray();
+        baos.close();
+        is.close();
+        return bytes;
+    }
+
+    private static void setBytesToStream(OutputStream os, byte[] bytes) throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        byte[] kb = new byte[1024];
+        int len;
+        while ((len = bais.read(kb)) != -1) {
+            os.write(kb, 0, len);
+        }
+        os.flush();
+        os.close();
+        bais.close();
+    }
+
+    public static byte[] doGets(String uri) throws IOException {
+        HttpsURLConnection httpsConn = getHttpsURLConnection(uri, "GET");
+        return getBytesFromStream(httpsConn.getInputStream());
+    }
+
+    public static byte[] doPosts(String uri, String data) throws IOException {
+        HttpsURLConnection httpsConn = getHttpsURLConnection(uri, "POST");
+        setBytesToStream(httpsConn.getOutputStream(), data.getBytes());
+        return getBytesFromStream(httpsConn.getInputStream());
+    }
+
+    public static byte[] doGet(String uri) throws IOException {
+        HttpURLConnection httpConn = getHttpURLConnection(uri, "GET");
+        return getBytesFromStream(httpConn.getInputStream());
+    }
+
+    public static byte[] doPost(String uri, String data) throws IOException {
+        HttpsURLConnection httpsConn = getHttpsURLConnection(uri, "POST");
+        setBytesToStream(httpsConn.getOutputStream(), data.getBytes());
+        return getBytesFromStream(httpsConn.getInputStream());
     }
 }
